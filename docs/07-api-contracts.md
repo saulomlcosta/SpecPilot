@@ -22,7 +22,7 @@ Este documento descreve contratos iniciais para orientar a implementacao da Web 
 
 ### Refinamento
 
-- `POST /api/projects/{id}/refinement-questions`
+- `POST /api/projects/{id}/generate-questions`
 - `POST /api/projects/{id}/refinement-answers`
 
 ### Documento
@@ -238,6 +238,39 @@ Response `200 OK` com o projeto atualizado.
 Response `204 No Content`.
 
 Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
+
+### `POST /api/projects/{id}/generate-questions`
+
+Header:
+
+```text
+Authorization: Bearer <jwt-token>
+```
+
+Response `200 OK`:
+
+```json
+{
+  "projectId": "guid",
+  "status": "QuestionsGenerated",
+  "questions": [
+    "Quem sao os principais usuarios do sistema?",
+    "Quais funcionalidades sao essenciais para a primeira versao?"
+  ]
+}
+```
+
+Regras do endpoint:
+
+- apenas o dono do projeto pode gerar perguntas
+- o projeto precisa estar com status `Draft`
+- as perguntas geradas devem ser persistidas
+- o status do projeto deve mudar para `QuestionsGenerated`
+- a interacao com IA deve ser registrada em log
+
+Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
+
+Response `409 Conflict` quando o projeto nao estiver em status `Draft`.
 
 ## Exemplo conceitual de documento gerado
 
