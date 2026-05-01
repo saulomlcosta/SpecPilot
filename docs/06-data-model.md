@@ -16,6 +16,8 @@
 - `usuarioId`
 - `nome`
 - `descricaoInicial`
+- `objetivo`
+- `publicoAlvo`
 - `status`
 - `criadoEm`
 - `atualizadoEm`
@@ -61,4 +63,3 @@ erDiagram
 - o modelo e propositalmente pequeno
 - nao ha versoes complexas de documento no MVP
 - nao ha colaboracao multiusuario no mesmo projeto
-

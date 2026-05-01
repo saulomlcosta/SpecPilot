@@ -13,6 +13,8 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Name).HasMaxLength(200).IsRequired();
         builder.Property(x => x.InitialDescription).HasColumnType("text").IsRequired();
+        builder.Property(x => x.Goal).HasColumnType("text").IsRequired();
+        builder.Property(x => x.TargetAudience).HasColumnType("text").IsRequired();
         builder.Property(x => x.Status).IsRequired();
 
         builder.HasOne(x => x.User)

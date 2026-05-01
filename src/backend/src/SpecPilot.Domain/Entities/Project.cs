@@ -8,6 +8,8 @@ public class Project : BaseEntity
     public Guid UserId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string InitialDescription { get; set; } = string.Empty;
+    public string Goal { get; set; } = string.Empty;
+    public string TargetAudience { get; set; } = string.Empty;
     public ProjectStatus Status { get; set; } = ProjectStatus.Draft;
     public User? User { get; set; }
     public ICollection<RefinementQuestion> RefinementQuestions { get; set; } = new List<RefinementQuestion>();

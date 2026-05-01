@@ -17,6 +17,8 @@ Este documento descreve contratos iniciais para orientar a implementacao da Web 
 - `POST /api/projects`
 - `GET /api/projects`
 - `GET /api/projects/{id}`
+- `PUT /api/projects/{id}`
+- `DELETE /api/projects/{id}`
 
 ### Refinamento
 
@@ -148,9 +150,94 @@ Exemplo de credenciais invalidas:
 ```json
 {
   "name": "Sistema de clinica",
-  "initialDescription": "Quero um sistema para agendamento, prontuario e notificacoes."
+  "initialDescription": "Quero um sistema para agendamento, prontuario e notificacoes.",
+  "goal": "Organizar o atendimento da clinica.",
+  "targetAudience": "Equipe administrativa e medica"
 }
 ```
+
+## Contratos de projetos
+
+### `POST /api/projects`
+
+Header:
+
+```text
+Authorization: Bearer <jwt-token>
+```
+
+Request:
+
+```json
+{
+  "name": "Sistema de clinica",
+  "initialDescription": "Quero um sistema para agendamento, prontuario e notificacoes.",
+  "goal": "Organizar o atendimento da clinica.",
+  "targetAudience": "Equipe administrativa e medica"
+}
+```
+
+Response `201 Created`:
+
+```json
+{
+  "id": "guid",
+  "name": "Sistema de clinica",
+  "initialDescription": "Quero um sistema para agendamento, prontuario e notificacoes.",
+  "goal": "Organizar o atendimento da clinica.",
+  "targetAudience": "Equipe administrativa e medica",
+  "status": "Draft",
+  "createdAt": "2026-05-01T12:00:00Z",
+  "updatedAt": null
+}
+```
+
+### `GET /api/projects`
+
+Response `200 OK`:
+
+```json
+[
+  {
+    "id": "guid",
+    "name": "Sistema de clinica",
+    "initialDescription": "Quero um sistema para agendamento, prontuario e notificacoes.",
+    "goal": "Organizar o atendimento da clinica.",
+    "targetAudience": "Equipe administrativa e medica",
+    "status": "Draft",
+    "createdAt": "2026-05-01T12:00:00Z",
+    "updatedAt": null
+  }
+]
+```
+
+### `GET /api/projects/{id}`
+
+Response `200 OK` com o mesmo formato de projeto.
+
+Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
+
+### `PUT /api/projects/{id}`
+
+Request:
+
+```json
+{
+  "name": "Sistema de clinica atualizado",
+  "initialDescription": "Descricao refinada da ideia.",
+  "goal": "Melhorar a organizacao do atendimento.",
+  "targetAudience": "Equipe administrativa, medica e recepcao",
+  "status": "QuestionsGenerated"
+}
+```
+
+Response `200 OK` com o projeto atualizado.
+
+### `DELETE /api/projects/{id}`
+
+Response `204 No Content`.
+
+Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
 
 ## Exemplo conceitual de documento gerado
 
