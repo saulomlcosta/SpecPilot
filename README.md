@@ -6,9 +6,18 @@ O **SpecPilot AI** e uma aplicacao web educacional focada em apoiar a fase inici
 
 Este repositorio foi preparado com foco didatico para uma pos-graduacao em IA Generativa. Nesta etapa, ele contem a base documental, a estrutura do projeto e os acordos de engenharia que orientarao a implementacao do MVP.
 
+## Leitura rapida para a banca
+
+Se esta for a primeira leitura do projeto, a sequencia recomendada e:
+
+1. entender o problema e o objetivo neste README
+2. consultar a arquitetura em `docs/03-architecture.md`
+3. verificar o uso de IA em `docs/04-ai-usage.md`
+4. revisar as ADRs em `docs/adr/`
+
 ## Problema
 
-Muitas ideias de software comecam com descricoes vagas, incompletas ou ambigueas. Isso dificulta o alinhamento entre problema, requisitos, riscos e prioridades tecnicas.
+Muitas ideias de software comecam com descricoes vagas, incompletas ou ambiguas. Isso dificulta o alinhamento entre problema, requisitos, riscos e prioridades tecnicas.
 
 Sem um processo de refinamento, e comum que:
 
@@ -31,12 +40,7 @@ O MVP permite:
 - descricao inicial da ideia do sistema
 - geracao de perguntas de refinamento com IA
 - resposta das perguntas pelo usuario
-- geracao de documento inicial com:
-  - visao geral
-  - requisitos funcionais
-  - requisitos nao funcionais
-  - casos de uso
-  - riscos
+- geracao de documento inicial com as secoes: visao geral, requisitos funcionais, requisitos nao funcionais, casos de uso e riscos
 
 Fora do MVP:
 
@@ -72,6 +76,21 @@ Por que usar IA aqui:
 
 O projeto deve funcionar **sem chave externa** usando `FakeAiService`. O provider OpenAI sera opcional e controlado por variavel de ambiente.
 
+## O que esta pronto nesta etapa
+
+Nesta fase, o repositorio entrega:
+
+- documentacao funcional e arquitetural
+- prompts de runtime e de desenvolvimento assistido por IA
+- ADRs iniciais
+- configuracao base de ambiente com PostgreSQL via Docker Compose
+
+Nesta fase, o repositorio ainda nao entrega:
+
+- backend implementado
+- frontend implementado
+- testes executaveis da aplicacao
+
 ## Arquitetura prevista
 
 ```mermaid
@@ -94,7 +113,7 @@ sequenceDiagram
     participant AI as AI Service
     participant DB as PostgreSQL
 
-    U->>FE: Cria conta / faz login
+    U->>FE: Cria conta ou faz login
     U->>FE: Cria projeto e descreve a ideia
     FE->>API: Envia descricao inicial
     API->>AI: Solicita perguntas de refinamento
@@ -119,16 +138,11 @@ sequenceDiagram
 
 ## Estrategia de testes
 
-- **Testes unitarios**
-  Validam regras de negocio, validacoes, mapeamentos e comportamentos isolados.
+- **Testes unitarios:** validam regras de negocio, validacoes, mapeamentos e comportamentos isolados.
+- **Testes de integracao:** validam endpoints, persistencia, fluxos principais e integracao com `FakeAiService`.
+- **Objetivo didatico:** garantir confianca na evolucao do projeto sem depender de servicos externos.
 
-- **Testes de integracao**
-  Validam endpoints, persistencia, fluxos principais e integracao com `FakeAiService`.
-
-- **Objetivo didatico**
-  Garantir confianca na evolucao do projeto sem depender de servicos externos.
-
-Mais detalhes estao em [docs/08-testing-strategy.md](/c:/Users/saulo/OneDrive/Desktop/PÓS IA/projectc4/docs/08-testing-strategy.md).
+Mais detalhes estao em [docs/08-testing-strategy.md](docs/08-testing-strategy.md).
 
 ## Decisoes de arquitetura
 
@@ -143,16 +157,24 @@ As principais decisoes foram registradas como ADRs:
 - testes automatizados
 - FakeAiService para execucao e testes sem dependencias externas
 
-Veja [docs/adr](/c:/Users/saulo/OneDrive/Desktop/PÓS IA/projectc4/docs/adr).
+Veja [docs/adr](docs/adr).
 
 ## Como o avaliador executa com Docker Compose
 
-Nesta etapa, o repositorio ainda **nao implementa backend nem frontend**, por decisao de escopo. Mesmo assim, a base ja traz `docker-compose.yml` para preparar o ambiente local com PostgreSQL.
+Nesta etapa, o repositorio ainda nao implementa backend nem frontend, por decisao de escopo. Mesmo assim, a base ja traz `docker-compose.yml` para preparar o ambiente local com PostgreSQL.
 
-Passos:
+No Linux ou macOS:
 
 ```bash
 cp .env.example .env
+docker compose up -d
+docker compose ps
+```
+
+No PowerShell:
+
+```powershell
+Copy-Item .env.example .env
 docker compose up -d
 docker compose ps
 ```
@@ -177,13 +199,20 @@ A estrategia definida para as proximas etapas e:
 
 ```bash
 docker compose up -d
-# backend
 dotnet test
-# frontend
 npm test
 ```
 
 Quando os testes forem implementados, o `FakeAiService` sera o comportamento padrao para garantir reprodutibilidade.
+
+## Prompts do projeto
+
+O repositorio separa dois tipos de prompts:
+
+- `prompts/runtime/`: prompts que a aplicacao usara em execucao
+- `prompts/codex/`: prompts que documentam como a IA pode apoiar o desenvolvimento do projeto
+
+Os prompts de runtime seguem CO-STAR e os prompts do Codex registram o processo de trabalho por etapa.
 
 ## Estrutura deste repositorio
 
@@ -204,11 +233,11 @@ Quando os testes forem implementados, o `FakeAiService` sera o comportamento pad
 
 ## Leituras recomendadas dentro do repositorio
 
-- [docs/00-project-overview.md](/c:/Users/saulo/OneDrive/Desktop/PÓS IA/projectc4/docs/00-project-overview.md)
-- [docs/03-architecture.md](/c:/Users/saulo/OneDrive/Desktop/PÓS IA/projectc4/docs/03-architecture.md)
-- [docs/04-ai-usage.md](/c:/Users/saulo/OneDrive/Desktop/PÓS IA/projectc4/docs/04-ai-usage.md)
-- [docs/08-testing-strategy.md](/c:/Users/saulo/OneDrive/Desktop/PÓS IA/projectc4/docs/08-testing-strategy.md)
-- [docs/12-docker-strategy.md](/c:/Users/saulo/OneDrive/Desktop/PÓS IA/projectc4/docs/12-docker-strategy.md)
+- [docs/00-project-overview.md](docs/00-project-overview.md)
+- [docs/03-architecture.md](docs/03-architecture.md)
+- [docs/04-ai-usage.md](docs/04-ai-usage.md)
+- [docs/08-testing-strategy.md](docs/08-testing-strategy.md)
+- [docs/12-docker-strategy.md](docs/12-docker-strategy.md)
 
 ## Convencao de commits
 
@@ -217,6 +246,6 @@ Este projeto adota **Conventional Commits** para manter historico claro e consis
 Exemplos:
 
 - `docs: add initial project documentation`
+- `docs: review initial documentation`
 - `feat: create backend project skeleton`
 - `test: add integration tests for project workflow`
-

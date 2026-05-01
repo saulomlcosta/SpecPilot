@@ -27,3 +27,8 @@ O arquivo atual provisiona apenas:
 
 Isso atende a necessidade de preparar a base sem implementar aplicacao antes da hora.
 
+## Limites intencionais desta etapa
+
+- nao ha servico de backend no compose
+- nao ha servico de frontend no compose
+- nao ha dependencia de provider externo de IA para subir o ambiente local

@@ -18,8 +18,18 @@ Permitir que um avaliador prepare o ambiente local da maneira mais simples possi
 
 ## Comandos
 
+No Linux ou macOS:
+
 ```bash
 cp .env.example .env
+docker compose up -d
+docker compose ps
+```
+
+No PowerShell:
+
+```powershell
+Copy-Item .env.example .env
 docker compose up -d
 docker compose ps
 ```
@@ -28,3 +38,8 @@ docker compose ps
 
 Nesta fase, apenas o PostgreSQL e provisionado. Backend e frontend serao adicionados nas proximas etapas do projeto.
 
+## Resultado esperado nesta fase
+
+- um container PostgreSQL em execucao
+- um volume persistente criado pelo Docker
+- nenhuma API ou interface web iniciada, porque ainda nao foram implementadas
