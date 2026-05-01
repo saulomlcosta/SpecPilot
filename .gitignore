@@ -1,0 +1,29 @@
+# Build e dependencias
+bin/
+obj/
+dist/
+build/
+node_modules/
+
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# IDEs e sistema operacional
+.vs/
+.vscode/
+*.user
+*.suo
+*.swp
+Thumbs.db
+Desktop.ini
+
+# Logs e cobertura
+*.log
+coverage/
+TestResults/
+
+# Docker
+pgdata/
+
