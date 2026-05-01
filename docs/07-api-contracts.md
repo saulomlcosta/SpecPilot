@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Este documento descreve contratos iniciais para orientar a futura implementacao da Web API. Nao se trata de especificacao final, mas de uma base de alinhamento.
+Este documento descreve contratos iniciais para orientar a implementacao da Web API do SpecPilot AI.
 
 ## Endpoints previstos
 
@@ -10,6 +10,7 @@ Este documento descreve contratos iniciais para orientar a futura implementacao 
 
 - `POST /api/auth/register`
 - `POST /api/auth/login`
+- `GET /api/auth/me`
 
 ### Projetos
 
@@ -26,6 +27,121 @@ Este documento descreve contratos iniciais para orientar a futura implementacao 
 
 - `POST /api/projects/{id}/initial-document`
 - `GET /api/projects/{id}/initial-document`
+
+## Contratos de autenticacao
+
+### `POST /api/auth/register`
+
+Request:
+
+```json
+{
+  "name": "Saulo",
+  "email": "saulo@example.com",
+  "password": "12345678"
+}
+```
+
+Response `201 Created`:
+
+```json
+{
+  "token": "jwt-token",
+  "user": {
+    "id": "guid",
+    "name": "Saulo",
+    "email": "saulo@example.com"
+  }
+}
+```
+
+### `POST /api/auth/login`
+
+Request:
+
+```json
+{
+  "email": "saulo@example.com",
+  "password": "12345678"
+}
+```
+
+Response `200 OK`:
+
+```json
+{
+  "token": "jwt-token",
+  "user": {
+    "id": "guid",
+    "name": "Saulo",
+    "email": "saulo@example.com"
+  }
+}
+```
+
+### `GET /api/auth/me`
+
+Header:
+
+```text
+Authorization: Bearer <jwt-token>
+```
+
+Response `200 OK`:
+
+```json
+{
+  "id": "guid",
+  "name": "Saulo",
+  "email": "saulo@example.com"
+}
+```
+
+Response `401 Unauthorized` quando o token estiver ausente ou invalido.
+
+## Padrao de erros HTTP
+
+As falhas esperadas da API devem retornar `application/problem+json` usando `ProblemDetails`.
+
+Campos esperados:
+
+- `title`: resumo curto do erro
+- `detail`: descricao legivel do problema
+- `status`: codigo HTTP
+- `code`: codigo interno do erro no campo `extensions`
+
+Exemplo de erro de validacao:
+
+```json
+{
+  "title": "Requisicao invalida.",
+  "detail": "O email informado e invalido. A senha deve ter pelo menos 8 caracteres.",
+  "status": 400,
+  "code": "common.validation_error"
+}
+```
+
+Exemplo de conflito de cadastro:
+
+```json
+{
+  "title": "Conflito de negocio.",
+  "detail": "Ja existe um usuario cadastrado com este email.",
+  "status": 409,
+  "code": "auth.email_already_registered"
+}
+```
+
+Exemplo de credenciais invalidas:
+
+```json
+{
+  "title": "Nao autorizado.",
+  "detail": "Email ou senha invalidos.",
+  "status": 401,
+  "code": "auth.invalid_credentials"
+}
+```
 
 ## Exemplo conceitual de criacao de projeto
 
@@ -58,5 +174,3 @@ Este documento descreve contratos iniciais para orientar a futura implementacao 
     "Requisitos ambiguos"
   ]
 }
-```
-

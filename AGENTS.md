@@ -43,6 +43,16 @@ Este documento define regras operacionais para agentes de IA que atuarem no proj
 - manter regras de negocio fora de detalhes de infraestrutura
 - priorizar nomes claros e intencao explicita
 
+## Diretrizes para tratamento de erros
+
+- handlers da camada Application devem retornar `Result` ou `Result<T>` para falhas esperadas
+- exceptions nao devem ser usadas para controle de fluxo de negocio esperado
+- exceptions devem representar falhas inesperadas
+- controllers e endpoints devem converter `Result` em respostas HTTP padronizadas
+- respostas de erro HTTP devem usar `ProblemDetails`
+- `ProblemDetails` deve ficar restrito a camada Api
+- Domain e Application nao devem depender de ASP.NET Core
+
 ## Diretrizes para IA
 
 - usar `FakeAiService` como comportamento padrao para desenvolvimento e testes
@@ -86,4 +96,3 @@ tests/
 - testes automatizados relevantes
 - ambiente local reproduzivel com Docker
 - commit com convencao correta
-

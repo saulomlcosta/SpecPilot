@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SpecPilot.Application.Abstractions.Auth;
+using SpecPilot.Application.Abstractions.Persistence;
 using SpecPilot.Infrastructure.Authentication;
 using SpecPilot.Infrastructure.Persistence;
 
@@ -18,6 +20,12 @@ public static class DependencyInjection
 
             options.UseNpgsql(connectionString);
         });
+
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<SpecPilotDbContext>());
+        services.AddHttpContextAccessor();
+        services.AddScoped<IPasswordHasherService, PasswordHasherService>();
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
 
         services.Configure<JwtOptions>(options =>
             configuration.GetSection(JwtOptions.SectionName).Bind(options));

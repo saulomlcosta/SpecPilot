@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using SpecPilot.Application.Abstractions.Persistence;
 using SpecPilot.Domain.Entities;
 
 namespace SpecPilot.Infrastructure.Persistence;
 
-public class SpecPilotDbContext(DbContextOptions<SpecPilotDbContext> options) : DbContext(options)
+public class SpecPilotDbContext(DbContextOptions<SpecPilotDbContext> options) : DbContext(options), IApplicationDbContext
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<Project> Projects => Set<Project>();
