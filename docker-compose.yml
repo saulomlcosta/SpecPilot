@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -19,6 +17,38 @@ services:
       timeout: 5s
       retries: 5
 
+  api:
+    build:
+      context: ./src/backend
+      dockerfile: ./SpecPilot.Api/Dockerfile
+    container_name: specpilot-api
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: http://+:8080
+      UseHttpsRedirection: "false"
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-specpilot};Username=${POSTGRES_USER:-specpilot};Password=${POSTGRES_PASSWORD:-specpilot}
+      DATABASE_URL: Host=postgres;Port=5432;Database=${POSTGRES_DB:-specpilot};Username=${POSTGRES_USER:-specpilot};Password=${POSTGRES_PASSWORD:-specpilot}
+      AI_PROVIDER: ${AI_PROVIDER:-fake}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
+      Jwt__Issuer: ${JWT_ISSUER:-SpecPilot}
+      Jwt__Audience: ${JWT_AUDIENCE:-SpecPilot}
+      Jwt__SecretKey: ${JWT_SECRET_KEY:-ChangeThisSecretKeyInFutureStages123!}
+      Jwt__ExpirationMinutes: ${JWT_EXPIRATION_MINUTES:-60}
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    profiles: ["frontend"]
+    image: alpine:3.20
+    container_name: specpilot-frontend-placeholder
+    command: ["sh", "-c", "echo 'Frontend ainda nao implementado nesta etapa.' && sleep infinity"]
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+
 volumes:
   postgres_data:
-

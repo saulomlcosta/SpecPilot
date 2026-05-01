@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Permitir que um avaliador prepare o ambiente local da maneira mais simples possivel.
+Permitir que um avaliador prepare e execute o ambiente local da maneira mais simples possivel.
 
 ## Pre-requisitos
 
@@ -22,24 +22,23 @@ No Linux ou macOS:
 
 ```bash
 cp .env.example .env
-docker compose up -d
-docker compose ps
+docker compose up --build
 ```
 
 No PowerShell:
 
 ```powershell
 Copy-Item .env.example .env
-docker compose up -d
-docker compose ps
+docker compose up --build
 ```
-
-## Observacao importante
-
-Nesta fase, apenas o PostgreSQL e provisionado. Backend e frontend serao adicionados nas proximas etapas do projeto.
 
 ## Resultado esperado nesta fase
 
 - um container PostgreSQL em execucao
-- um volume persistente criado pelo Docker
-- nenhuma API ou interface web iniciada, porque ainda nao foram implementadas
+- um container da API em execucao
+- Swagger acessivel em `http://localhost:8080/swagger`
+- health check acessivel em `http://localhost:8080/health`
+
+## Observacao importante
+
+O frontend ainda nao foi implementado. O `docker-compose.yml` ja deixa um servico opcional preparado para etapas futuras, mas a execucao atual nao depende dele.

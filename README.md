@@ -81,15 +81,16 @@ O projeto deve funcionar **sem chave externa** usando `FakeAiService`. O provide
 Nesta fase, o repositorio entrega:
 
 - documentacao funcional e arquitetural
+- esqueleto inicial do backend em .NET 8
 - prompts de runtime e de desenvolvimento assistido por IA
 - ADRs iniciais
-- configuracao base de ambiente com PostgreSQL via Docker Compose
+- configuracao base de ambiente com PostgreSQL e API via Docker Compose
 
 Nesta fase, o repositorio ainda nao entrega:
 
-- backend implementado
 - frontend implementado
-- testes executaveis da aplicacao
+- endpoints funcionais do MVP
+- integracao real com OpenAI
 
 ## Arquitetura prevista
 
@@ -161,49 +162,66 @@ Veja [docs/adr](docs/adr).
 
 ## Como o avaliador executa com Docker Compose
 
-Nesta etapa, o repositorio ainda nao implementa backend nem frontend, por decisao de escopo. Mesmo assim, a base ja traz `docker-compose.yml` para preparar o ambiente local com PostgreSQL.
+O ambiente local foi preparado para ser iniciado com um unico comando. Nesta etapa, `docker compose up --build` deve subir:
+
+- PostgreSQL
+- API backend
+
+O frontend ainda nao existe, mas o `docker-compose.yml` ja reserva um servico opcional para etapas futuras sem quebrar a execucao atual.
 
 No Linux ou macOS:
 
 ```bash
 cp .env.example .env
-docker compose up -d
-docker compose ps
+docker compose up --build
 ```
 
 No PowerShell:
 
 ```powershell
 Copy-Item .env.example .env
-docker compose up -d
-docker compose ps
+docker compose up --build
 ```
 
-Resultado esperado nesta fase:
+## Enderecos esperados
 
-- container do PostgreSQL em execucao
-- volume persistente criado
-- base preparada para a proxima etapa de implementacao
+- API: `http://localhost:8080`
+- Swagger: `http://localhost:8080/swagger`
+- Health check: `http://localhost:8080/health`
+- PostgreSQL: `localhost:5432`
 
-Para encerrar:
+## Variaveis de ambiente principais
+
+O arquivo `.env.example` ja traz valores padrao para:
+
+- banco PostgreSQL
+- porta da API
+- configuracao JWT basica
+- `AI_PROVIDER=fake`
+
+Isso permite subir o ambiente sem depender de chave externa de IA.
+
+## Como encerrar o ambiente
 
 ```bash
 docker compose down
 ```
 
-## Como rodar testes
-
-Nesta etapa ainda nao existem projetos de teste implementados, porque o backend e o frontend ainda nao foram criados.
-
-A estrategia definida para as proximas etapas e:
+Para remover tambem os volumes:
 
 ```bash
-docker compose up -d
-dotnet test
-npm test
+docker compose down -v
 ```
 
-Quando os testes forem implementados, o `FakeAiService` sera o comportamento padrao para garantir reprodutibilidade.
+## Como rodar testes
+
+Os testes atuais do backend podem ser executados localmente com:
+
+```bash
+dotnet test src/backend/SpecPilot.sln
+```
+
+Quando os testes de fluxo do MVP forem ampliados, o `FakeAiService` continuara sendo o comportamento padrao para garantir reprodutibilidade.
 
 ## Prompts do projeto
 
@@ -226,9 +244,11 @@ Os prompts de runtime seguem CO-STAR e os prompts do Codex registram o processo 
 |-- docs/
 |   |-- adr/
 |   `-- ...
-`-- prompts/
-    |-- codex/
-    `-- runtime/
+|-- prompts/
+|   |-- codex/
+|   `-- runtime/
+|-- src/
+`-- tests/
 ```
 
 ## Leituras recomendadas dentro do repositorio
@@ -247,5 +267,5 @@ Exemplos:
 
 - `docs: add initial project documentation`
 - `docs: review initial documentation`
-- `feat: create backend project skeleton`
-- `test: add integration tests for project workflow`
+- `chore: add backend solution structure`
+- `chore: add docker compose setup`
