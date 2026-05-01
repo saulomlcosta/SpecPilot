@@ -32,7 +32,13 @@ Devem cobrir:
 - `FakeAiService` deve ser o padrao para testes
 - cenarios felizes e invalidos devem ser cobertos
 
+## Aplicacao ao servico de IA
+
+- a abstracao de IA deve ter testes unitarios proprios
+- o `FakeAiService` deve retornar respostas deterministicas
+- a selecao do provider deve poder ser verificada por configuracao
+- nenhum teste desta etapa deve depender de credenciais externas
+
 ## Beneficio didatico
 
 Essa estrategia ajuda a demonstrar separacao de responsabilidades e confiabilidade sem exigir infraestrutura externa complexa.
-

@@ -29,7 +29,7 @@ services:
       UseHttpsRedirection: "false"
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-specpilot};Username=${POSTGRES_USER:-specpilot};Password=${POSTGRES_PASSWORD:-specpilot}
       DATABASE_URL: Host=postgres;Port=5432;Database=${POSTGRES_DB:-specpilot};Username=${POSTGRES_USER:-specpilot};Password=${POSTGRES_PASSWORD:-specpilot}
-      AI_PROVIDER: ${AI_PROVIDER:-fake}
+      Ai__Provider: ${Ai__Provider:-Fake}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
       Jwt__Issuer: ${JWT_ISSUER:-SpecPilot}
