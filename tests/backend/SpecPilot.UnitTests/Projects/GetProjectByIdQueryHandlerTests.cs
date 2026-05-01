@@ -61,6 +61,19 @@ public class GetProjectByIdQueryHandlerTests
         result.Error.Code.Should().Be("projects.not_found");
     }
 
+    [Fact]
+    public async Task Should_return_not_found_for_unknown_project()
+    {
+        await using var context = CreateContext();
+        var handler = new GetProjectByIdQueryHandler(context, new TestCurrentUserAccessor(Guid.NewGuid()));
+
+        var result = await handler.Handle(new GetProjectByIdQuery(Guid.NewGuid()), CancellationToken.None);
+
+        result.IsFailure.Should().BeTrue();
+        result.Error!.Type.Should().Be(ErrorType.NotFound);
+        result.Error.Code.Should().Be("projects.not_found");
+    }
+
     private static SpecPilotDbContext CreateContext()
     {
         var options = new DbContextOptionsBuilder<SpecPilotDbContext>()

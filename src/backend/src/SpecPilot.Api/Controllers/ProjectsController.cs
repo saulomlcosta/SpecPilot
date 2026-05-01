@@ -53,8 +53,7 @@ public class ProjectsController : ControllerBase
             Name = command.Name,
             InitialDescription = command.InitialDescription,
             Goal = command.Goal,
-            TargetAudience = command.TargetAudience,
-            Status = command.Status
+            TargetAudience = command.TargetAudience
         };
 
         var result = await _mediator.Send(request, cancellationToken);

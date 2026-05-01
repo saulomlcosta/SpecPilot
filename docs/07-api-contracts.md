@@ -226,12 +226,18 @@ Request:
   "name": "Sistema de clinica atualizado",
   "initialDescription": "Descricao refinada da ideia.",
   "goal": "Melhorar a organizacao do atendimento.",
-  "targetAudience": "Equipe administrativa, medica e recepcao",
-  "status": "QuestionsGenerated"
+  "targetAudience": "Equipe administrativa, medica e recepcao"
 }
 ```
 
 Response `200 OK` com o projeto atualizado.
+
+Observacoes:
+
+- o endpoint atualiza apenas campos editaveis do projeto
+- `status` nao faz parte do contrato de update comum
+- tentativas de enviar `status` no JSON devem ser ignoradas pelo model binding
+- `ProjectStatus` muda apenas nos casos de uso especificos do fluxo
 
 ### `DELETE /api/projects/{id}`
 

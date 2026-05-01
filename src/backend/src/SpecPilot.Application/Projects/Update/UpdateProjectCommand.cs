@@ -11,5 +11,4 @@ public class UpdateProjectCommand : IRequest<Result<ProjectResponse>>
     public string InitialDescription { get; init; } = string.Empty;
     public string Goal { get; init; } = string.Empty;
     public string TargetAudience { get; init; } = string.Empty;
-    public string Status { get; init; } = string.Empty;
 }

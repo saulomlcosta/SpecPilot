@@ -36,13 +36,15 @@ public class UpdateProjectCommandHandlerTests
             Name = "Projeto Atualizado",
             InitialDescription = "Descricao Atualizada",
             Goal = "Objetivo Atualizado",
-            TargetAudience = "Publico Atualizado",
-            Status = "QuestionsGenerated"
+            TargetAudience = "Publico Atualizado"
         }, CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         result.Value!.Name.Should().Be("Projeto Atualizado");
-        context.Projects.Single().Status.Should().Be(ProjectStatus.QuestionsGenerated);
+        context.Projects.Single().InitialDescription.Should().Be("Descricao Atualizada");
+        context.Projects.Single().Goal.Should().Be("Objetivo Atualizado");
+        context.Projects.Single().TargetAudience.Should().Be("Publico Atualizado");
+        context.Projects.Single().Status.Should().Be(ProjectStatus.Draft);
         context.Projects.Single().UpdatedAtUtc.Should().NotBeNull();
     }
 
@@ -70,8 +72,7 @@ public class UpdateProjectCommandHandlerTests
             Name = "Projeto Atualizado",
             InitialDescription = "Descricao Atualizada",
             Goal = "Objetivo Atualizado",
-            TargetAudience = "Publico Atualizado",
-            Status = "Draft"
+            TargetAudience = "Publico Atualizado"
         }, CancellationToken.None);
 
         result.IsFailure.Should().BeTrue();

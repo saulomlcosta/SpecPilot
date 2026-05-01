@@ -16,8 +16,7 @@ public class UpdateProjectCommandValidatorTests
             Name = string.Empty,
             InitialDescription = string.Empty,
             Goal = string.Empty,
-            TargetAudience = string.Empty,
-            Status = string.Empty
+            TargetAudience = string.Empty
         };
 
         var result = _validator.Validate(command);
@@ -28,6 +27,5 @@ public class UpdateProjectCommandValidatorTests
         result.Errors.Should().Contain(x => x.PropertyName == nameof(UpdateProjectCommand.InitialDescription));
         result.Errors.Should().Contain(x => x.PropertyName == nameof(UpdateProjectCommand.Goal));
         result.Errors.Should().Contain(x => x.PropertyName == nameof(UpdateProjectCommand.TargetAudience));
-        result.Errors.Should().Contain(x => x.PropertyName == nameof(UpdateProjectCommand.Status));
     }
 }

@@ -63,3 +63,5 @@ erDiagram
 - o modelo e propositalmente pequeno
 - nao ha versoes complexas de documento no MVP
 - nao ha colaboracao multiusuario no mesmo projeto
+- `status` do projeto e controlado pelos casos de uso do fluxo principal
+- o endpoint comum de update nao pode alterar manualmente `ProjectStatus`

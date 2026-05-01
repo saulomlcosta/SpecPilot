@@ -1,5 +1,4 @@
 using FluentValidation;
-using SpecPilot.Domain.Enums;
 
 namespace SpecPilot.Application.Projects.Update;
 
@@ -22,10 +21,5 @@ public class UpdateProjectCommandValidator : AbstractValidator<UpdateProjectComm
 
         RuleFor(x => x.TargetAudience)
             .NotEmpty();
-
-        RuleFor(x => x.Status)
-            .NotEmpty()
-            .Must(status => Enum.TryParse<ProjectStatus>(status, true, out _))
-            .WithMessage("O status informado e invalido.");
     }
 }

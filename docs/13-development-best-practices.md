@@ -16,6 +16,7 @@
 - documentar decisoes arquiteturais
 - escrever testes desde cedo
 - usar commits pequenos e descritivos
+- proteger invariantes de fluxo em casos de uso especificos, sem expor mudancas sensiveis em endpoints genericos
 
 ## Result Pattern neste projeto
 

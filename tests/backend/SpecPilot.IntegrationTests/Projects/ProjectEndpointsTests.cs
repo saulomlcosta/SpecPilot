@@ -102,7 +102,41 @@ public class ProjectEndpointsTests : IClassFixture<SpecPilotApiFactory>
     }
 
     [Fact]
+    public async Task Get_by_id_should_return_not_found_for_unknown_project()
+    {
+        var client = await CreateAuthenticatedClientAsync();
+
+        var response = await client.GetAsync($"/api/projects/{Guid.NewGuid()}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task Update_should_change_owned_project()
+    {
+        var client = await CreateAuthenticatedClientAsync();
+        var createdProject = await CreateProjectAsync(client, "Projeto A");
+
+        var response = await client.PutAsJsonAsync($"/api/projects/{createdProject.Id}", new
+        {
+            name = "Projeto Atualizado",
+            initialDescription = "Descricao Atualizada",
+            goal = "Objetivo Atualizado",
+            targetAudience = "Publico Atualizado"
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var body = await response.Content.ReadFromJsonAsync<ProjectResponseContract>();
+        body.Should().NotBeNull();
+        body!.Name.Should().Be("Projeto Atualizado");
+        body.InitialDescription.Should().Be("Descricao Atualizada");
+        body.Goal.Should().Be("Objetivo Atualizado");
+        body.TargetAudience.Should().Be("Publico Atualizado");
+        body.Status.Should().Be("Draft");
+    }
+
+    [Fact]
+    public async Task Update_should_not_allow_manual_status_change()
     {
         var client = await CreateAuthenticatedClientAsync();
         var createdProject = await CreateProjectAsync(client, "Projeto A");
@@ -119,8 +153,25 @@ public class ProjectEndpointsTests : IClassFixture<SpecPilotApiFactory>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await response.Content.ReadFromJsonAsync<ProjectResponseContract>();
         body.Should().NotBeNull();
-        body!.Name.Should().Be("Projeto Atualizado");
-        body.Status.Should().Be("QuestionsGenerated");
+        body!.Status.Should().Be("Draft");
+    }
+
+    [Fact]
+    public async Task Update_should_return_not_found_for_project_from_another_user()
+    {
+        var clientA = await CreateAuthenticatedClientAsync();
+        var clientB = await CreateAuthenticatedClientAsync();
+        var createdProject = await CreateProjectAsync(clientA, "Projeto A");
+
+        var response = await clientB.PutAsJsonAsync($"/api/projects/{createdProject.Id}", new
+        {
+            name = "Projeto Atualizado",
+            initialDescription = "Descricao Atualizada",
+            goal = "Objetivo Atualizado",
+            targetAudience = "Publico Atualizado"
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -134,6 +185,18 @@ public class ProjectEndpointsTests : IClassFixture<SpecPilotApiFactory>
 
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
         getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Delete_should_return_not_found_for_project_from_another_user()
+    {
+        var clientA = await CreateAuthenticatedClientAsync();
+        var clientB = await CreateAuthenticatedClientAsync();
+        var createdProject = await CreateProjectAsync(clientA, "Projeto A");
+
+        var response = await clientB.DeleteAsync($"/api/projects/{createdProject.Id}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     private async Task<HttpClient> CreateAuthenticatedClientAsync()

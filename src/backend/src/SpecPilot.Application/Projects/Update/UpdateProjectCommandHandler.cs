@@ -4,7 +4,6 @@ using SpecPilot.Application.Abstractions.Auth;
 using SpecPilot.Application.Abstractions.Persistence;
 using SpecPilot.Application.Projects.Common;
 using SpecPilot.Domain.Common;
-using SpecPilot.Domain.Enums;
 
 namespace SpecPilot.Application.Projects.Update;
 
@@ -44,7 +43,6 @@ public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand,
         project.InitialDescription = request.InitialDescription.Trim();
         project.Goal = request.Goal.Trim();
         project.TargetAudience = request.TargetAudience.Trim();
-        project.Status = Enum.Parse<ProjectStatus>(request.Status, true);
         project.UpdatedAtUtc = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
