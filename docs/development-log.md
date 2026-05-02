@@ -237,3 +237,10 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - confirmados os documentos finais do MVP: README storytelling, checklist de avaliacao, release notes, ADRs, prompts runtime, prompts Codex e development log
 - confirmada a configuracao com `FakeAiService` como provider padrao, `OpenAI` opcional e ausencia de chamada direta do frontend para OpenAI
 - verificado que os itens fora do escopo permanecem documentados apenas como limitacoes ou proximos passos
+
+## 2026-05-02 - Prompt 24 concluido
+
+- criada a rastreabilidade final para a publicacao da versao `v1.0.0` do MVP
+- a tag `v1.0.0` aponta para o estado final apos o `final delivery check`
+- a release do GitHub usa `docs/15-release-notes.md` como base documental
+- nenhuma funcionalidade foi alterada nesta etapa, apenas o registro do processo de release
