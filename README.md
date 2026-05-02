@@ -259,6 +259,10 @@ Os prompts de runtime seguem CO-STAR e os prompts do Codex registram o processo 
 - [docs/08-testing-strategy.md](docs/08-testing-strategy.md)
 - [docs/12-docker-strategy.md](docs/12-docker-strategy.md)
 
+## Documentacao complementar
+
+- [docs/development-log.md](docs/development-log.md)
+
 ## Convencao de commits
 
 Este projeto adota **Conventional Commits** para manter historico claro e consistente.
