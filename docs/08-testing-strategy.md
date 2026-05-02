@@ -45,6 +45,31 @@ Devem cobrir:
 - verificacoes de persistencia devem preferir consultas `AsNoTracking()` e chamadas assincronas
 - os testes do backend tambem devem ser executados automaticamente no CI
 
+### Testes de frontend
+
+Devem cobrir, de forma enxuta e orientada a comportamento:
+
+- formularios principais (login, cadastro, criacao de projeto)
+- acoes guiadas por `ProjectStatus` no detalhe do projeto
+- renderizacao do documento tecnico no frontend
+- tratamento amigavel de erros `ProblemDetails`
+- helpers essenciais, como armazenamento de token
+
+Stack adotada no frontend:
+
+- Vitest
+- React Testing Library
+- jsdom
+- `@testing-library/jest-dom`
+- `@testing-library/user-event`
+
+Diretrizes especificas:
+
+- mockar chamadas HTTP e servicos para evitar dependencia de backend real
+- nao depender de Docker para executar testes de frontend
+- nao realizar chamadas reais a OpenAI
+- priorizar testes pequenos de alto valor em vez de cobertura extensa e fragil
+
 ## Aplicacao ao servico de IA
 
 - a abstracao de IA deve ter testes unitarios proprios

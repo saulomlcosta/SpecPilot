@@ -145,3 +145,10 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - conectada a pagina de documento ao endpoint `GET /api/projects/{id}/document` com secoes estruturadas
 - adicionados servicos e tipos para endpoints de refinamento e documento com tratamento amigavel de `ProblemDetails`
 - mantida a orientacao de status do backend para habilitar apenas acoes compativeis em cada etapa
+
+## 2026-05-02 - Prompt 16a concluido
+
+- configurado frontend com Vitest, React Testing Library e ambiente `jsdom`
+- adicionados testes automatizados enxutos para login, cadastro, criacao de projeto, detalhe por status e pagina de documento
+- adicionados testes basicos para helpers de mensagem de erro e armazenamento de token
+- atualizada documentacao com orientacoes de execucao de testes frontend

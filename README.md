@@ -266,6 +266,17 @@ npm run dev
 
 Por padrao, a aplicacao espera a API em `http://localhost:8080`.
 
+## Como rodar testes do frontend
+
+No PowerShell:
+
+```powershell
+Set-Location src/frontend/specpilot-web
+npm test
+```
+
+Os testes usam Vitest + React Testing Library com ambiente `jsdom` e nao dependem de backend real.
+
 ## Integracao continua
 
 O repositorio possui um workflow de GitHub Actions em `.github/workflows/backend-ci.yml` para validar automaticamente o backend em `push` e `pull_request`.
