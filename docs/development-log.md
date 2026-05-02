@@ -159,3 +159,9 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - removido `backend-ci.yml` para evitar pipelines duplicadas
 - configurado job frontend com `npm ci`, `npm run build` e `npm test` em modo nao interativo
 - mantido `Ai__Provider=Fake` no backend CI para impedir chamadas reais a OpenAI
+
+## 2026-05-02 - Correcao do lockfile do frontend para CI
+
+- sincronizado `src/frontend/specpilot-web/package-lock.json` com `package.json` via `npm install`
+- validado localmente o fluxo do CI frontend com `npm ci`, `npm run build` e `npm test`
+- mantido o workflow usando `npm ci` no GitHub Actions, sem alterar escopo funcional
