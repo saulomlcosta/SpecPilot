@@ -44,4 +44,4 @@ docker compose up --build
 
 ## Observacao importante
 
-O frontend desta etapa e um esqueleto inicial com rotas placeholder. O fluxo funcional completo ainda sera conectado nas proximas entregas.
+O frontend desta etapa ja cobre autenticacao (cadastro, login, sessao e logout), mas os fluxos completos de projetos, perguntas e documento ainda serao conectados nas proximas entregas.

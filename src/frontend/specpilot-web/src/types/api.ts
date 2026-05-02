@@ -16,6 +16,17 @@ export interface AuthResponse {
   user: UserResponse;
 }
 
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
 export interface ProjectResponse {
   id: string;
   name: string;

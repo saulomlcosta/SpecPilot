@@ -1,4 +1,6 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Button } from '../components/Button';
+import { useAuth } from '../contexts/AuthContext';
 import { useApiHealth } from '../hooks/useApiHealth';
 
 const navItems = [
@@ -8,6 +10,7 @@ const navItems = [
 
 export function AuthenticatedLayout() {
   const healthQuery = useApiHealth();
+  const { user, logout } = useAuth();
 
   return (
     <div className="min-h-screen px-4 py-6 sm:px-6">
@@ -23,15 +26,21 @@ export function AuthenticatedLayout() {
             </p>
           </div>
 
-          <div className="rounded-2xl bg-stone-100 px-4 py-3 text-sm text-slate-600">
-            API:{' '}
-            {healthQuery.isSuccess ? (
-              <span className="font-semibold text-brand-700">online</span>
-            ) : healthQuery.isLoading ? (
-              <span className="font-semibold text-slate-700">verificando</span>
-            ) : (
-              <span className="font-semibold text-rose-600">indisponivel</span>
-            )}
+          <div className="flex flex-col gap-3 rounded-2xl bg-stone-100 px-4 py-3 text-sm text-slate-600">
+            <p>
+              API:{' '}
+              {healthQuery.isSuccess ? (
+                <span className="font-semibold text-brand-700">online</span>
+              ) : healthQuery.isLoading ? (
+                <span className="font-semibold text-slate-700">verificando</span>
+              ) : (
+                <span className="font-semibold text-rose-600">indisponivel</span>
+              )}
+            </p>
+            <p className="font-medium text-slate-700">Usuario: {user?.name || user?.email || 'Nao identificado'}</p>
+            <Button variant="ghost" className="w-full" onClick={logout}>
+              Sair
+            </Button>
           </div>
         </header>
 

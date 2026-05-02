@@ -124,3 +124,10 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - configurados Tailwind CSS, React Router, TanStack Query, React Hook Form e Zod
 - adicionadas rotas, layouts, paginas placeholder e cliente HTTP inicial
 - atualizado o Docker Compose para subir frontend, API e PostgreSQL juntos
+
+## 2026-05-02 - Prompt 14 concluido
+
+- implementadas telas funcionais de cadastro e login integradas ao backend
+- adicionado gerenciamento de sessao com JWT em storage centralizado e `GET /api/auth/me`
+- aplicadas rotas protegidas para as paginas internas e redirecionamentos de autenticacao
+- implementado logout no layout autenticado com exibicao do usuario atual
