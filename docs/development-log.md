@@ -185,3 +185,15 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - apos a regeneracao, `npm ci`, `npm run build` e `npm test` passaram localmente no frontend, sem alteracao funcional de codigo
 - o workflow foi mantido com `npm ci` e recebeu apenas um passo temporario de diagnostico para a proxima execucao confirmar commit, diretorio e estrutura real do lockfile lido pelo runner
 - a decisao permanece a mesma: nao substituir `npm ci` por `npm install` no CI, porque o objetivo da pipeline e validar exatamente o lockfile versionado
+
+## 2026-05-02 - Prompt 17 concluido
+
+- validada a subida completa do ambiente com `docker compose down -v` seguido de `docker compose up --build -d`
+- confirmados os tres servicos esperados no Docker Compose: `postgres`, `api` e `frontend`, com PostgreSQL em estado `healthy`
+- validados os endpoints principais da execucao local: frontend em `http://localhost:3000`, API em `http://localhost:8080`, Swagger em `http://localhost:8080/swagger` e health check em `http://localhost:8080/health`
+- confirmada a configuracao padrao com `Ai__Provider=Fake` e sem necessidade de chave OpenAI para avaliacao local
+- executado o fluxo principal do MVP contra a stack Docker: cadastro, login, criacao de projeto, geracao de perguntas, resposta das perguntas, geracao de documento e consulta do documento persistido
+- confirmadas as transicoes de status `Draft`, `QuestionsGenerated`, `QuestionsAnswered` e `DocumentGenerated` no fluxo ponta a ponta da API usada pelo frontend
+- confirmadas as secoes do documento gerado: visao geral, requisitos funcionais, requisitos nao funcionais, casos de uso e riscos
+- reexecutados com sucesso `dotnet test src/backend/SpecPilot.sln`, `npm ci`, `npm run build`, `npm test` e `docker compose config`
+- atualizada a documentacao de Docker para refletir que o frontend ja cobre o fluxo funcional atual do MVP

@@ -33,6 +33,14 @@ A API cria automaticamente o schema do banco necessario para o MVP ao iniciar.
 ### Frontend
 
 O frontend React desta etapa roda na porta `3000`, usando `VITE_API_BASE_URL` apontando por padrao para `http://localhost:8080`.
+O fluxo funcional atual do MVP ja permite:
+
+- cadastro e login
+- criacao e gerenciamento de projetos
+- geracao de perguntas de refinamento
+- resposta das perguntas com `questionId` real
+- geracao do documento tecnico inicial
+- visualizacao do documento gerado
 
 ## Enderecos esperados
 
@@ -52,4 +60,4 @@ O Dockerfile do backend:
 ## Limites intencionais desta etapa
 
 - nao ha dependencia obrigatoria de provider real de IA
-- o frontend ainda e um esqueleto sem o fluxo funcional completo
+- o provider OpenAI continua opcional e nao e necessario para avaliacao local
