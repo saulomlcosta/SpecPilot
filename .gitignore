@@ -23,7 +23,7 @@ Desktop.ini
 *.log
 coverage/
 TestResults/
+*.tsbuildinfo
 
 # Docker
 pgdata/
-

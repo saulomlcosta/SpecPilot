@@ -43,10 +43,18 @@ services:
         condition: service_healthy
 
   frontend:
-    profiles: ["frontend"]
-    image: alpine:3.20
-    container_name: specpilot-frontend-placeholder
-    command: ["sh", "-c", "echo 'Frontend ainda nao implementado nesta etapa.' && sleep infinity"]
+    build:
+      context: ./src/frontend/specpilot-web
+      dockerfile: ./Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080}
+    container_name: specpilot-frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080}
+    depends_on:
+      api:
+        condition: service_started
     ports:
       - "${WEB_PORT:-3000}:3000"
 

@@ -36,10 +36,12 @@ docker compose up --build
 
 - um container PostgreSQL em execucao
 - um container da API em execucao
+- um container do frontend em execucao
+- frontend acessivel em `http://localhost:3000`
 - Swagger acessivel em `http://localhost:8080/swagger`
 - health check acessivel em `http://localhost:8080/health`
 - schema inicial do banco criado automaticamente pela API no startup
 
 ## Observacao importante
 
-O frontend ainda nao foi implementado. O `docker-compose.yml` ja deixa um servico opcional preparado para etapas futuras, mas a execucao atual nao depende dele.
+O frontend desta etapa e um esqueleto inicial com rotas placeholder. O fluxo funcional completo ainda sera conectado nas proximas entregas.

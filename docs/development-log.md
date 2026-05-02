@@ -117,3 +117,10 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - adicionada cobertura de integracao para `GET /api/projects/{id}/questions` com acesso negado a projeto de outro usuario
 - ajustada a jornada principal automatizada para usar `GET /questions` e os `questionId` reais antes de responder o refinamento
 - ampliada a validacao do fluxo completo para conferir provider `Fake` e os dois `AiInteractionLog` esperados
+
+## 2026-05-02 - Prompt 13 concluido
+
+- criado o esqueleto do frontend em React, TypeScript e Vite
+- configurados Tailwind CSS, React Router, TanStack Query, React Hook Form e Zod
+- adicionadas rotas, layouts, paginas placeholder e cliente HTTP inicial
+- atualizado o Docker Compose para subir frontend, API e PostgreSQL juntos

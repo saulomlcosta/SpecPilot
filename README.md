@@ -84,14 +84,14 @@ Nesta fase, o repositorio entrega:
 
 - documentacao funcional e arquitetural
 - esqueleto inicial do backend em .NET 8
+- esqueleto inicial do frontend em React + TypeScript
 - prompts de runtime e de desenvolvimento assistido por IA
 - ADRs iniciais
 - configuracao base de ambiente com PostgreSQL e API via Docker Compose
 
 Nesta fase, o repositorio ainda nao entrega:
 
-- frontend implementado
-- endpoints funcionais do MVP
+- frontend funcional completo conectado a todo o fluxo do MVP
 - integracao real com OpenAI
 
 ## Arquitetura prevista
@@ -168,8 +168,7 @@ O ambiente local foi preparado para ser iniciado com um unico comando. Nesta eta
 
 - PostgreSQL
 - API backend
-
-O frontend ainda nao existe, mas o `docker-compose.yml` ja reserva um servico opcional para etapas futuras sem quebrar a execucao atual.
+- frontend React
 
 No Linux ou macOS:
 
@@ -190,6 +189,7 @@ Ao subir via Docker Compose, a API inicializa automaticamente o schema necessari
 ## Enderecos esperados
 
 - API: `http://localhost:8080`
+- Frontend: `http://localhost:3000`
 - Swagger: `http://localhost:8080/swagger`
 - Health check: `http://localhost:8080/health`
 - PostgreSQL: `localhost:5432`
@@ -200,6 +200,7 @@ O arquivo `.env.example` ja traz valores padrao para:
 
 - banco PostgreSQL
 - porta da API
+- porta e base URL do frontend
 - configuracao JWT basica
 - `Ai__Provider=Fake`
 - `Ai__OpenAi__ApiKey`
@@ -250,6 +251,20 @@ dotnet test src/backend/SpecPilot.sln
 ```
 
 Quando os testes de fluxo do MVP forem ampliados, o `FakeAiService` continuara sendo o comportamento padrao para garantir reprodutibilidade.
+
+## Como rodar o frontend isoladamente
+
+O frontend foi criado em `src/frontend/specpilot-web`.
+
+No PowerShell:
+
+```powershell
+Set-Location src/frontend/specpilot-web
+npm install
+npm run dev
+```
+
+Por padrao, a aplicacao espera a API em `http://localhost:8080`.
 
 ## Integracao continua
 

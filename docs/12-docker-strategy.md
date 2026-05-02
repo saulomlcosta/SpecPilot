@@ -7,8 +7,7 @@ Garantir reproducibilidade local, simplicidade de avaliacao e isolamento minimo 
 ## Estrategia adotada
 
 - usar Docker Compose como ponto unico de subida do ambiente local
-- subir PostgreSQL e API com `docker compose up --build`
-- manter frontend como servico futuro e opcional
+- subir PostgreSQL, API e frontend com `docker compose up --build`
 - manter configuracoes principais em variaveis de ambiente
 - usar `Ai__Provider=Fake` por padrao
 
@@ -31,13 +30,14 @@ Responsavel pela persistencia relacional do projeto e exposto localmente na port
 Construida via Dockerfile proprio do backend e exposta localmente na porta `8080`.
 A API cria automaticamente o schema do banco necessario para o MVP ao iniciar.
 
-### Frontend futuro
+### Frontend
 
-O `docker-compose.yml` ja reserva um servico opcional para o frontend, mas esse servico nao participa da execucao padrao enquanto a aplicacao web ainda nao existe.
+O frontend React desta etapa roda na porta `3000`, usando `VITE_API_BASE_URL` apontando por padrao para `http://localhost:8080`.
 
 ## Enderecos esperados
 
 - API: `http://localhost:8080`
+- Frontend: `http://localhost:3000`
 - Swagger: `http://localhost:8080/swagger`
 - Health check: `http://localhost:8080/health`
 
@@ -51,5 +51,5 @@ O Dockerfile do backend:
 
 ## Limites intencionais desta etapa
 
-- nao ha frontend implementado
 - nao ha dependencia obrigatoria de provider real de IA
+- o frontend ainda e um esqueleto sem o fluxo funcional completo
