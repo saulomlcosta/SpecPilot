@@ -50,14 +50,25 @@ Quando o provider OpenAI estiver habilitado:
 
 ## Prompts do Codex existentes
 
-- `00-create-documentation-base.md`
-  Registra a solicitacao original para criar a base documental do projeto.
-- `01-review-documentation.md`
-  Registra a etapa de revisao documental e validacao de consistencia.
-- `02-create-backend-skeleton.md`
-  Define a futura etapa de criacao do esqueleto do backend.
-- `03-add-docker-support.md`
-  Define a futura expansao da estrategia de Docker quando houver aplicacoes implementadas.
+Os prompts de `prompts/codex/` registram a evolucao do desenvolvimento assistido por IA em etapas pequenas e versionadas.
+
+O conjunto atual cobre, entre outros pontos:
+
+- criacao e revisao da base documental;
+- estrutura inicial de backend;
+- Docker e Docker Compose;
+- autenticacao;
+- gerenciamento de projetos;
+- abstracao de IA, `FakeAiService` e provider OpenAI opcional;
+- geracao de perguntas e documento;
+- testes backend e frontend;
+- CI com GitHub Actions;
+- validacao do Docker Compose;
+- polimento da jornada do usuario;
+- checklist de avaliacao;
+- README final em formato storytelling.
+
+Isso permite rastrear o processo de desenvolvimento do projeto de ponta a ponta, sem depender apenas do historico da conversa.
 
 ## Criterios de qualidade para prompts
 

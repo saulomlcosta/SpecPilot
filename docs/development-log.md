@@ -217,3 +217,9 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - reescrito o `README.md` final em formato storytelling, com foco academico, didatico e profissional
 - explicadas as duas dimensoes de uso de IA: dentro do produto e durante o desenvolvimento com Codex
 - documentados prompts versionados, human-in-the-loop, skills/superpowers, Docker, testes, CI e principais decisoes arquiteturais
+
+## 2026-05-02 - Prompt 21 concluido
+
+- revisada a coerencia final entre README, documentacao principal, prompts e escopo real do MVP
+- corrigidos documentos que ainda descreviam estado antigo do projeto como se backend e frontend nao estivessem implementados
+- mantidas as funcionalidades fora do escopo apenas como limitacoes ou evolucoes futuras, sem promessas indevidas

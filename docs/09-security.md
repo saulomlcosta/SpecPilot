@@ -1,6 +1,6 @@
 # 09 - Seguranca
 
-## Medidas previstas para o MVP
+## Medidas adotadas e reforcadas no MVP
 
 - armazenamento seguro de senha com hash adequado
 - validacao de entrada em todas as bordas da API
@@ -8,9 +8,19 @@
 - uso de variaveis de ambiente para configuracoes sensiveis
 - nao exposicao de chaves externas no codigo-fonte
 
-## Limites desta etapa
+## Estado atual desta etapa
 
-Como backend e frontend ainda nao foram implementados, este documento registra apenas diretrizes iniciais de seguranca.
+O backend e o frontend do MVP ja foram implementados. Este documento resume os cuidados de seguranca coerentes com o estado atual do projeto, sem transformar o MVP em uma solucao de seguranca avancada fora de escopo.
+
+Controles visiveis nesta etapa:
+
+- autenticacao com JWT;
+- rotas protegidas no backend e no frontend;
+- isolamento de projetos por usuario autenticado;
+- `ProjectStatus` protegido contra alteracao manual no fluxo comum;
+- respostas HTTP de erro padronizadas sem stack trace publico;
+- chave OpenAI mantida fora do frontend e fora do codigo versionado;
+- `FakeAiService` como padrao para execucao local e testes sem dependencia externa.
 
 ## Cuidados com IA
 
