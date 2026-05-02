@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SpecPilot.Api.Extensions;
 using SpecPilot.Application.Projects.Create;
 using SpecPilot.Application.Projects.Delete;
+using SpecPilot.Application.Projects.AnswerQuestions;
 using SpecPilot.Application.Projects.GenerateQuestions;
 using SpecPilot.Application.Projects.GetById;
 using SpecPilot.Application.Projects.List;
@@ -71,6 +72,22 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> GenerateQuestions(Guid id, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GenerateRefinementQuestionsCommand(id), cancellationToken);
+        return this.ToActionResult(result, Ok);
+    }
+
+    [HttpPut("{id:guid}/questions/answers")]
+    public async Task<IActionResult> AnswerQuestions(
+        Guid id,
+        [FromBody] AnswerRefinementQuestionsCommand command,
+        CancellationToken cancellationToken)
+    {
+        var request = new AnswerRefinementQuestionsCommand
+        {
+            ProjectId = id,
+            Answers = command.Answers
+        };
+
+        var result = await _mediator.Send(request, cancellationToken);
         return this.ToActionResult(result, Ok);
     }
 }

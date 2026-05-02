@@ -23,7 +23,7 @@ Este documento descreve contratos iniciais para orientar a implementacao da Web 
 ### Refinamento
 
 - `POST /api/projects/{id}/generate-questions`
-- `POST /api/projects/{id}/refinement-answers`
+- `PUT /api/projects/{id}/questions/answers`
 
 ### Documento
 
@@ -277,6 +277,54 @@ Regras do endpoint:
 Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
 
 Response `409 Conflict` quando o projeto nao estiver em status `Draft`.
+
+### `PUT /api/projects/{id}/questions/answers`
+
+Header:
+
+```text
+Authorization: Bearer <jwt-token>
+```
+
+Request:
+
+```json
+{
+  "answers": [
+    {
+      "questionId": "guid",
+      "answer": "Analistas e gestores."
+    },
+    {
+      "questionId": "guid",
+      "answer": "Refinar requisitos do produto."
+    }
+  ]
+}
+```
+
+Response `200 OK`:
+
+```json
+{
+  "projectId": "guid",
+  "status": "QuestionsAnswered"
+}
+```
+
+Regras do endpoint:
+
+- apenas o dono do projeto pode responder as perguntas
+- o projeto precisa estar com status `QuestionsGenerated`
+- todas as perguntas do projeto devem ser respondidas na mesma requisicao
+- as respostas devem ser persistidas nas perguntas de refinamento
+- o status do projeto deve mudar para `QuestionsAnswered`
+
+Response `400 Bad Request` quando a requisicao nao enviar todas as respostas obrigatorias.
+
+Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
+
+Response `409 Conflict` quando o projeto nao estiver em status `QuestionsGenerated` ou ainda nao possuir perguntas geradas.
 
 ## Exemplo conceitual de documento gerado
 
