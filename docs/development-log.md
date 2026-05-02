@@ -223,3 +223,9 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - revisada a coerencia final entre README, documentacao principal, prompts e escopo real do MVP
 - corrigidos documentos que ainda descreviam estado antigo do projeto como se backend e frontend nao estivessem implementados
 - mantidas as funcionalidades fora do escopo apenas como limitacoes ou evolucoes futuras, sem promessas indevidas
+
+## 2026-05-02 - Prompt 22 concluido
+
+- criado `docs/15-release-notes.md` para registrar oficialmente a entrega da versao MVP 1.0
+- atualizado o README com link para as release notes academicas
+- salvo o Prompt 22 em `prompts/codex/22-create-release-notes.md`

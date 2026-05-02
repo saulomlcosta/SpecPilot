@@ -470,6 +470,7 @@ Mais detalhes estao em [docs/09-security.md](docs/09-security.md).
 Para uma validacao objetiva do MVP, consulte:
 
 - [docs/14-evaluation-checklist.md](docs/14-evaluation-checklist.md)
+- [docs/15-release-notes.md](docs/15-release-notes.md)
 
 ## Limitacoes conhecidas
 
