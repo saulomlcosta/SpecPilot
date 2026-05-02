@@ -22,7 +22,8 @@ public class SpecPilotApiFactory : WebApplicationFactory<Program>
         {
             config.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["UseHttpsRedirection"] = "false"
+                ["UseHttpsRedirection"] = "false",
+                ["Ai:Provider"] = "Fake"
             });
         });
 

@@ -89,3 +89,10 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - migrado o tratamento global de excecoes para `IExceptionHandler`
 - adicionados logs estruturados em fluxos principais e no provider OpenAI
 - ampliados testes de integracao para validar respostas padronizadas de erro
+
+## 2026-05-01 - Prompt 12 concluido
+
+- consolidada a cobertura do fluxo principal do MVP com teste de jornada completa
+- reforcados cenarios de `ProblemDetails` para validacao e acesso indevido
+- fixado `Ai__Provider=Fake` na infraestrutura de testes de integracao
+- ajustadas verificacoes de persistencia para `AsNoTracking()` e consultas assincronas

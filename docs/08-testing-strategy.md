@@ -14,6 +14,8 @@ Devem cobrir:
 - regras de negocio
 - transformacoes de dados
 - comportamentos do servico de IA fake
+- selecao do provider de IA por configuracao
+- protecao do fluxo de `ProjectStatus` nos casos de uso
 
 ### Testes de integracao
 
@@ -21,9 +23,14 @@ Devem cobrir:
 
 - endpoints principais
 - integracao com banco de dados
-- fluxo de criacao de projeto
-- fluxo de geracao de perguntas
-- fluxo de geracao de documento
+- fluxo principal do MVP de ponta a ponta:
+  - registro
+  - login
+  - criacao de projeto
+  - geracao de perguntas
+  - resposta das perguntas
+  - geracao de documento
+  - consulta do documento gerado
 - respostas `ProblemDetails` para erros esperados
 - tratamento global de excecoes inesperadas
 
@@ -32,8 +39,10 @@ Devem cobrir:
 - cada caso de uso relevante deve ter cobertura proporcional
 - testes nao devem depender de internet
 - `FakeAiService` deve ser o padrao para testes
+- o ambiente de integracao deve fixar explicitamente `Ai__Provider=Fake`
 - cenarios felizes e invalidos devem ser cobertos
 - cenarios de erro HTTP devem validar status e formato padronizado da resposta
+- verificacoes de persistencia devem preferir consultas `AsNoTracking()` e chamadas assincronas
 
 ## Aplicacao ao servico de IA
 
@@ -41,6 +50,7 @@ Devem cobrir:
 - o `FakeAiService` deve retornar respostas deterministicas
 - a selecao do provider deve poder ser verificada por configuracao
 - nenhum teste desta etapa deve depender de credenciais externas
+- nenhum teste desta etapa deve realizar chamada real a OpenAI
 
 ## Beneficio didatico
 

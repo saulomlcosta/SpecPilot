@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SpecPilot.Domain.Enums;
 using SpecPilot.Infrastructure.Persistence;
@@ -35,9 +36,9 @@ public class GenerateRefinementQuestionsEndpointTests : IClassFixture<SpecPilotA
 
         using var scope = _factory.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<SpecPilotDbContext>();
-        context.RefinementQuestions.Count(x => x.ProjectId == projectId).Should().Be(5);
-        context.AiInteractionLogs.Count(x => x.ProjectId == projectId).Should().Be(1);
-        context.Projects.Single(x => x.Id == projectId).Status.Should().Be(ProjectStatus.QuestionsGenerated);
+        (await context.RefinementQuestions.AsNoTracking().CountAsync(x => x.ProjectId == projectId)).Should().Be(5);
+        (await context.AiInteractionLogs.AsNoTracking().CountAsync(x => x.ProjectId == projectId)).Should().Be(1);
+        (await context.Projects.AsNoTracking().SingleAsync(x => x.Id == projectId)).Status.Should().Be(ProjectStatus.QuestionsGenerated);
     }
 
     [Fact]

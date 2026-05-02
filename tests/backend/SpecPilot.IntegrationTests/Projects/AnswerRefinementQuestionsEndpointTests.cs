@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SpecPilot.Domain.Entities;
 using SpecPilot.Domain.Enums;
@@ -44,9 +45,13 @@ public class AnswerRefinementQuestionsEndpointTests : IClassFixture<SpecPilotApi
 
         using var scope = _factory.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<SpecPilotDbContext>();
-        context.Projects.Single(x => x.Id == projectId).Status.Should().Be(ProjectStatus.QuestionsAnswered);
-        context.RefinementQuestions.Where(x => x.ProjectId == projectId).Should().OnlyContain(x => !string.IsNullOrWhiteSpace(x.AnswerText));
-        context.RefinementQuestions.Where(x => x.ProjectId == projectId).Should().OnlyContain(x => x.AnsweredAtUtc.HasValue);
+        (await context.Projects.AsNoTracking().SingleAsync(x => x.Id == projectId)).Status.Should().Be(ProjectStatus.QuestionsAnswered);
+        var persistedQuestions = await context.RefinementQuestions
+            .AsNoTracking()
+            .Where(x => x.ProjectId == projectId)
+            .ToListAsync();
+        persistedQuestions.Should().OnlyContain(x => !string.IsNullOrWhiteSpace(x.AnswerText));
+        persistedQuestions.Should().OnlyContain(x => x.AnsweredAtUtc.HasValue);
     }
 
     [Fact]
@@ -182,7 +187,8 @@ public class AnswerRefinementQuestionsEndpointTests : IClassFixture<SpecPilotApi
 
         using var scope = _factory.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<SpecPilotDbContext>();
-        return context.RefinementQuestions
+        return await context.RefinementQuestions
+            .AsNoTracking()
             .Where(x => x.ProjectId == projectId)
             .OrderBy(x => x.Order)
             .Select(x => new RefinementQuestion
@@ -192,7 +198,7 @@ public class AnswerRefinementQuestionsEndpointTests : IClassFixture<SpecPilotApi
                 Order = x.Order,
                 QuestionText = x.QuestionText
             })
-            .ToList();
+            .ToListAsync();
     }
 
     private sealed class AuthResponseContract

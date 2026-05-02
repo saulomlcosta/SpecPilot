@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using FluentAssertions;
 using SpecPilot.IntegrationTests.Auth;
+using SpecPilot.IntegrationTests.Infrastructure;
 
 namespace SpecPilot.IntegrationTests.Projects;
 
@@ -99,6 +100,10 @@ public class ProjectEndpointsTests : IClassFixture<SpecPilotApiFactory>
         var response = await clientB.GetAsync($"/api/projects/{createdProject.Id}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Status.Should().Be(404);
+        problem.Extensions["code"].GetString().Should().Be("projects.not_found");
     }
 
     [Fact]
@@ -154,6 +159,26 @@ public class ProjectEndpointsTests : IClassFixture<SpecPilotApiFactory>
         var body = await response.Content.ReadFromJsonAsync<ProjectResponseContract>();
         body.Should().NotBeNull();
         body!.Status.Should().Be("Draft");
+    }
+
+    [Fact]
+    public async Task Create_should_return_bad_request_for_invalid_payload()
+    {
+        var client = await CreateAuthenticatedClientAsync();
+
+        var response = await client.PostAsJsonAsync("/api/projects", new
+        {
+            name = "",
+            initialDescription = "",
+            goal = "",
+            targetAudience = ""
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Status.Should().Be(400);
+        problem.Extensions["code"].GetString().Should().Be("common.validation_error");
     }
 
     [Fact]
