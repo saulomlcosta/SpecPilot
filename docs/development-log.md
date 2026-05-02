@@ -102,3 +102,12 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - adicionada pipeline de GitHub Actions para restore, build e testes do backend
 - fixado `Ai__Provider=Fake` no workflow para evitar chamadas reais a OpenAI
 - documentada a decisao de nao subir PostgreSQL no CI porque os testes de integracao atuais usam banco em memoria
+
+## 2026-05-02 - Validacao pre-frontend do backend
+
+- validado que a API sobe em `http://localhost:8080` e o Swagger responde em `http://localhost:8080/swagger`
+- identificado e corrigido o bloqueio de Docker em que o schema do PostgreSQL nao era criado no startup
+- alinhadas as variaveis de OpenAI do `docker-compose.yml` com `Ai__OpenAi__ApiKey` e `Ai__OpenAi__Model`
+- adicionado `GET /api/projects/{id}/questions` para o frontend recuperar `questionId` sem depender de acesso ao banco
+- validado o fluxo principal completo em Docker com `Fake` como provider registrado em `AiInteractionLog`
+- registrado roteiro manual para validacao futura do fluxo principal do MVP

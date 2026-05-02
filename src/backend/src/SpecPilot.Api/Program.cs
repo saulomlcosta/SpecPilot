@@ -8,6 +8,7 @@ using SpecPilot.Api.Extensions;
 using SpecPilot.Application;
 using SpecPilot.Infrastructure;
 using SpecPilot.Infrastructure.Authentication;
+using SpecPilot.Infrastructure.Persistence;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -103,6 +104,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<SpecPilotDbContext>();
+    await dbContext.Database.EnsureCreatedAsync();
+}
 
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
 {

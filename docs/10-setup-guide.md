@@ -38,6 +38,7 @@ docker compose up --build
 - um container da API em execucao
 - Swagger acessivel em `http://localhost:8080/swagger`
 - health check acessivel em `http://localhost:8080/health`
+- schema inicial do banco criado automaticamente pela API no startup
 
 ## Observacao importante
 

@@ -30,8 +30,8 @@ services:
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-specpilot};Username=${POSTGRES_USER:-specpilot};Password=${POSTGRES_PASSWORD:-specpilot}
       DATABASE_URL: Host=postgres;Port=5432;Database=${POSTGRES_DB:-specpilot};Username=${POSTGRES_USER:-specpilot};Password=${POSTGRES_PASSWORD:-specpilot}
       Ai__Provider: ${Ai__Provider:-Fake}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
-      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
+      Ai__OpenAi__ApiKey: ${Ai__OpenAi__ApiKey:-}
+      Ai__OpenAi__Model: ${Ai__OpenAi__Model:-gpt-4.1-mini}
       Jwt__Issuer: ${JWT_ISSUER:-SpecPilot}
       Jwt__Audience: ${JWT_AUDIENCE:-SpecPilot}
       Jwt__SecretKey: ${JWT_SECRET_KEY:-ChangeThisSecretKeyInFutureStages123!}

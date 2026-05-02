@@ -185,6 +185,8 @@ Copy-Item .env.example .env
 docker compose up --build
 ```
 
+Ao subir via Docker Compose, a API inicializa automaticamente o schema necessario do banco para o MVP atual.
+
 ## Enderecos esperados
 
 - API: `http://localhost:8080`

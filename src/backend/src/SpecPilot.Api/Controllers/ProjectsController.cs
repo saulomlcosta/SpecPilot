@@ -9,6 +9,7 @@ using SpecPilot.Application.Projects.GenerateQuestions;
 using SpecPilot.Application.Projects.GenerateDocument;
 using SpecPilot.Application.Projects.GetById;
 using SpecPilot.Application.Projects.GetDocument;
+using SpecPilot.Application.Projects.GetQuestions;
 using SpecPilot.Application.Projects.List;
 using SpecPilot.Application.Projects.Update;
 
@@ -74,6 +75,13 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> GenerateQuestions(Guid id, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GenerateRefinementQuestionsCommand(id), cancellationToken);
+        return this.ToActionResult(result, Ok);
+    }
+
+    [HttpGet("{id:guid}/questions")]
+    public async Task<IActionResult> GetQuestions(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetProjectQuestionsQuery(id), cancellationToken);
         return this.ToActionResult(result, Ok);
     }
 

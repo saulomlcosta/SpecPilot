@@ -10,7 +10,7 @@ Garantir reproducibilidade local, simplicidade de avaliacao e isolamento minimo 
 - subir PostgreSQL e API com `docker compose up --build`
 - manter frontend como servico futuro e opcional
 - manter configuracoes principais em variaveis de ambiente
-- usar `AI_PROVIDER=fake` por padrao
+- usar `Ai__Provider=Fake` por padrao
 
 ## Beneficios
 
@@ -18,6 +18,7 @@ Garantir reproducibilidade local, simplicidade de avaliacao e isolamento minimo 
 - menor friccao para avaliacao
 - reducao de diferencas entre maquinas
 - independencia de chave externa de IA
+- inicializacao automatica do schema necessario para o MVP
 
 ## Servicos desta etapa
 
@@ -28,6 +29,7 @@ Responsavel pela persistencia relacional do projeto e exposto localmente na port
 ### API
 
 Construida via Dockerfile proprio do backend e exposta localmente na porta `8080`.
+A API cria automaticamente o schema do banco necessario para o MVP ao iniciar.
 
 ### Frontend futuro
 
@@ -50,5 +52,4 @@ O Dockerfile do backend:
 ## Limites intencionais desta etapa
 
 - nao ha frontend implementado
-- nao ha endpoints funcionais do MVP
 - nao ha dependencia obrigatoria de provider real de IA

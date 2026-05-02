@@ -42,6 +42,25 @@ public class GenerateRefinementQuestionsEndpointTests : IClassFixture<SpecPilotA
     }
 
     [Fact]
+    public async Task Should_get_generated_questions_with_ids_for_owned_project()
+    {
+        var client = await CreateAuthenticatedClientAsync();
+        var projectId = await CreateProjectAsync(client);
+
+        await client.PostAsync($"/api/projects/{projectId}/generate-questions", content: null);
+        var response = await client.GetAsync($"/api/projects/{projectId}/questions");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var body = await response.Content.ReadFromJsonAsync<GetQuestionsResponseContract>();
+        body.Should().NotBeNull();
+        body!.ProjectId.Should().Be(projectId);
+        body.Status.Should().Be("QuestionsGenerated");
+        body.Questions.Should().HaveCount(5);
+        body.Questions.Should().OnlyContain(x => x.Id != Guid.Empty);
+        body.Questions.Should().OnlyContain(x => !string.IsNullOrWhiteSpace(x.QuestionText));
+    }
+
+    [Fact]
     public async Task Should_return_not_found_for_project_from_another_user()
     {
         var clientA = await CreateAuthenticatedClientAsync();
@@ -117,5 +136,20 @@ public class GenerateRefinementQuestionsEndpointTests : IClassFixture<SpecPilotA
         public Guid ProjectId { get; set; }
         public string Status { get; set; } = string.Empty;
         public List<string> Questions { get; set; } = [];
+    }
+
+    private sealed class GetQuestionsResponseContract
+    {
+        public Guid ProjectId { get; set; }
+        public string Status { get; set; } = string.Empty;
+        public List<QuestionItemContract> Questions { get; set; } = [];
+    }
+
+    private sealed class QuestionItemContract
+    {
+        public Guid Id { get; set; }
+        public int Order { get; set; }
+        public string QuestionText { get; set; } = string.Empty;
+        public string? Answer { get; set; }
     }
 }

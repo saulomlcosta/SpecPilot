@@ -23,6 +23,7 @@ Este documento descreve contratos iniciais para orientar a implementacao da Web 
 ### Refinamento
 
 - `POST /api/projects/{id}/generate-questions`
+- `GET /api/projects/{id}/questions`
 - `PUT /api/projects/{id}/questions/answers`
 
 ### Documento
@@ -336,6 +337,41 @@ Response `400 Bad Request` quando a requisicao nao enviar todas as respostas obr
 Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
 
 Response `409 Conflict` quando o projeto nao estiver em status `QuestionsGenerated` ou ainda nao possuir perguntas geradas.
+
+### `GET /api/projects/{id}/questions`
+
+Header:
+
+```text
+Authorization: Bearer <jwt-token>
+```
+
+Response `200 OK`:
+
+```json
+{
+  "projectId": "guid",
+  "status": "QuestionsGenerated",
+  "questions": [
+    {
+      "id": "guid",
+      "order": 1,
+      "questionText": "Quem sao os principais usuarios do sistema?",
+      "answer": null
+    }
+  ]
+}
+```
+
+Regras do endpoint:
+
+- apenas o dono do projeto pode consultar as perguntas
+- o endpoint retorna as perguntas persistidas com seus IDs
+- o endpoint permite ao frontend recuperar os `questionId` necessarios para responder o refinamento
+
+Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
+
+Response `404 Not Found` quando o projeto ainda nao possuir perguntas geradas.
 
 ### `POST /api/projects/{id}/generate-document`
 
