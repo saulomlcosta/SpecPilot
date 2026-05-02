@@ -244,3 +244,10 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - a tag `v1.0.0` aponta para o estado final apos o `final delivery check`
 - a release do GitHub usa `docs/15-release-notes.md` como base documental
 - nenhuma funcionalidade foi alterada nesta etapa, apenas o registro do processo de release
+
+## 2026-05-02 - Correcao de CORS para autenticacao no frontend
+
+- bug encontrado em teste manual pelo navegador ao chamar a API em `http://localhost:8080` a partir do frontend em `http://localhost:3000`
+- causa raiz identificada: ausencia de configuracao explicita de CORS no backend ASP.NET Core para as origens locais do frontend
+- correcao aplicada com a policy `SpecPilotFrontend`, configurada por `Cors__AllowedOrigins`, permitindo apenas `http://localhost:3000` e `http://127.0.0.1:3000`, com metodos do MVP e header `Authorization`
+- validados o ciclo vermelho e verde com teste de integracao de preflight CORS, `dotnet test src/backend/SpecPilot.sln`, `npm ci`, `npm run build`, `npm test`, `docker compose config`, `docker compose up --build -d`, `OPTIONS /api/auth/login`, `POST /api/auth/register` e `POST /api/auth/login` com header `Origin`

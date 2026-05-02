@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using SpecPilot.Api.Exceptions;
 using SpecPilot.Api.Extensions;
@@ -12,6 +13,10 @@ using SpecPilot.Infrastructure.Persistence;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+const string specPilotFrontendCorsPolicy = "SpecPilotFrontend";
+
+var allowedCorsOrigins = (builder.Configuration["Cors:AllowedOrigins"] ?? string.Empty)
+    .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
 builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
@@ -51,6 +56,21 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddHealthChecks();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(specPilotFrontendCorsPolicy, policyBuilder =>
+    {
+        if (allowedCorsOrigins.Length == 0)
+        {
+            return;
+        }
+
+        policyBuilder
+            .WithOrigins(allowedCorsOrigins)
+            .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization)
+            .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+    });
+});
 
 var jwtSection = builder.Configuration.GetSection(JwtOptions.SectionName);
 var jwtOptions = jwtSection.Get<JwtOptions>() ?? new JwtOptions();
@@ -124,6 +144,7 @@ if (app.Configuration.GetValue("UseHttpsRedirection", true))
     app.UseHttpsRedirection();
 }
 
+app.UseCors(specPilotFrontendCorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 

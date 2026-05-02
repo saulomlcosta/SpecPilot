@@ -32,6 +32,12 @@ Copy-Item .env.example .env
 docker compose up --build
 ```
 
+## Variavel de ambiente relevante
+
+- `Cors__AllowedOrigins=http://localhost:3000;http://127.0.0.1:3000`
+
+Essa configuracao permite que o frontend local acesse a API no ambiente de desenvolvimento e no Docker Compose sem abrir CORS para qualquer origem.
+
 ## Resultado esperado nesta fase
 
 - um container PostgreSQL em execucao

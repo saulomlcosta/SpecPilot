@@ -10,6 +10,7 @@ Garantir reproducibilidade local, simplicidade de avaliacao e isolamento minimo 
 - subir PostgreSQL, API e frontend com `docker compose up --build`
 - manter configuracoes principais em variaveis de ambiente
 - usar `Ai__Provider=Fake` por padrao
+- restringir CORS da API ao frontend local configurado por `Cors__AllowedOrigins`
 
 ## Beneficios
 
@@ -29,6 +30,7 @@ Responsavel pela persistencia relacional do projeto e exposto localmente na port
 
 Construida via Dockerfile proprio do backend e exposta localmente na porta `8080`.
 A API cria automaticamente o schema do banco necessario para o MVP ao iniciar.
+No ambiente padrao do Compose, a policy de CORS permite explicitamente `http://localhost:3000` e `http://127.0.0.1:3000`, incluindo o header `Authorization`, sem usar `AllowAnyOrigin`.
 
 ### Frontend
 

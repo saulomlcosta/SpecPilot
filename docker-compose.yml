@@ -32,6 +32,7 @@ services:
       Ai__Provider: ${Ai__Provider:-Fake}
       Ai__OpenAi__ApiKey: ${Ai__OpenAi__ApiKey:-}
       Ai__OpenAi__Model: ${Ai__OpenAi__Model:-gpt-4.1-mini}
+      Cors__AllowedOrigins: ${Cors__AllowedOrigins:-http://localhost:3000;http://127.0.0.1:3000}
       Jwt__Issuer: ${JWT_ISSUER:-SpecPilot}
       Jwt__Audience: ${JWT_AUDIENCE:-SpecPilot}
       Jwt__SecretKey: ${JWT_SECRET_KEY:-ChangeThisSecretKeyInFutureStages123!}
