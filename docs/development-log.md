@@ -152,3 +152,10 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - adicionados testes automatizados enxutos para login, cadastro, criacao de projeto, detalhe por status e pagina de documento
 - adicionados testes basicos para helpers de mensagem de erro e armazenamento de token
 - atualizada documentacao com orientacoes de execucao de testes frontend
+
+## 2026-05-02 - Prompt 16b concluido
+
+- unificado o CI em `.github/workflows/ci.yml` com jobs separados para backend e frontend
+- removido `backend-ci.yml` para evitar pipelines duplicadas
+- configurado job frontend com `npm ci`, `npm run build` e `npm test` em modo nao interativo
+- mantido `Ai__Provider=Fake` no backend CI para impedir chamadas reais a OpenAI

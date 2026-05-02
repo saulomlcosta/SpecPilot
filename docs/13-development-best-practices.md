@@ -22,6 +22,7 @@
 - manter chaves e modelos de IA apenas em configuracao por variavel de ambiente
 - encapsular detalhes HTTP de providers apenas na Infrastructure
 - usar integracao continua para validar restore, build e testes de forma automatica
+- manter CI cobrindo backend e frontend para detectar regressao cedo, sem acoplar deploy nesta fase
 
 ## Result Pattern neste projeto
 

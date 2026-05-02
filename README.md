@@ -279,9 +279,21 @@ Os testes usam Vitest + React Testing Library com ambiente `jsdom` e nao depende
 
 ## Integracao continua
 
-O repositorio possui um workflow de GitHub Actions em `.github/workflows/backend-ci.yml` para validar automaticamente o backend em `push` e `pull_request`.
+O repositorio possui um workflow de GitHub Actions em `.github/workflows/ci.yml` para validar automaticamente backend e frontend em `push` e `pull_request`.
 
-Essa pipeline executa restore, build e testes da solution em `src/backend`, usando `FakeAiService` para manter o fluxo do MVP previsivel, sem depender de OpenAI real. Isso reforca qualidade, confiabilidade e rastreabilidade do projeto.
+Essa pipeline executa:
+
+- backend: restore, build e testes da solution em `src/backend`
+- frontend: `npm ci`, `npm run build` e `npm test` em `src/frontend/specpilot-web`
+
+No escopo atual, o CI:
+
+- nao faz deploy
+- nao publica imagens Docker
+- nao usa segredos reais de OpenAI
+- fixa `Ai__Provider=Fake` no job de backend para evitar chamadas reais ao provider externo
+
+Isso reforca qualidade, confiabilidade e rastreabilidade do MVP sem aumentar escopo de infraestrutura.
 
 ## Prompts do projeto
 

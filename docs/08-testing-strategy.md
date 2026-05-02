@@ -84,6 +84,23 @@ Essa estrategia ajuda a demonstrar separacao de responsabilidades e confiabilida
 
 ## Aplicacao no CI
 
-O repositorio usa GitHub Actions para executar restore, build e testes do backend em cada `push` e `pull_request`.
+O repositorio usa GitHub Actions em `.github/workflows/ci.yml` para validar backend e frontend em cada `push` e `pull_request`.
 
-Como os testes de integracao atuais usam banco em memoria com `WebApplicationFactory`, nao ha necessidade de configurar PostgreSQL manualmente no workflow nesta etapa. O CI fixa `Ai__Provider=Fake` para impedir chamadas reais a OpenAI.
+No backend, o CI executa:
+
+- `dotnet restore src/backend/SpecPilot.sln`
+- `dotnet build src/backend/SpecPilot.sln --no-restore --configuration Release`
+- `dotnet test src/backend/SpecPilot.sln --no-build --configuration Release`
+
+No frontend, o CI executa:
+
+- `npm ci`
+- `npm run build`
+- `npm test` (modo nao interativo via `vitest run`)
+
+Decisoes importantes desta etapa:
+
+- testes frontend rodam isolados, sem depender de backend real
+- testes backend mantem `Ai__Provider=Fake` para impedir chamadas reais a OpenAI
+- nao ha deploy, publicacao de imagem ou uso de segredos reais no CI
+- nao ha necessidade de subir PostgreSQL manualmente no workflow para os testes atuais do backend
