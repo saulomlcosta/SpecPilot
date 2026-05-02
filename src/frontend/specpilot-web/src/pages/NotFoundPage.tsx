@@ -5,7 +5,7 @@ import { Card } from '../components/Card';
 export function NotFoundPage() {
   return (
     <div className="mx-auto max-w-xl py-16">
-      <Card title="Pagina nao encontrada" description="A rota informada nao faz parte do esqueleto atual do frontend.">
+      <Card title="Pagina nao encontrada" description="A rota informada nao faz parte do fluxo principal disponivel nesta etapa.">
         <Link to="/projects">
           <Button>Ir para projetos</Button>
         </Link>

@@ -14,9 +14,8 @@ export function PublicLayout() {
             Transforme ideias vagas em uma base de documentacao tecnica inicial.
           </h1>
           <p className="mt-6 max-w-2xl text-sm leading-7 text-brand-100">
-            Este frontend do Prompt 13 prepara a experiencia para autenticacao, criacao de projetos,
-            refinamento com perguntas e consulta do documento final, sempre conectado ao backend ja
-            validado.
+            Entre ou crie sua conta para seguir o fluxo principal do MVP: criar projeto, responder
+            perguntas de refinamento e revisar o documento tecnico gerado.
           </p>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2">

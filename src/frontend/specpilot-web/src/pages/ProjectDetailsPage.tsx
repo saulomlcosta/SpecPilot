@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../components/Button';
@@ -9,6 +9,7 @@ import { EmptyState } from '../components/EmptyState';
 import { FormError } from '../components/FormError';
 import { Input } from '../components/Input';
 import { LoadingState } from '../components/LoadingState';
+import { Notice } from '../components/Notice';
 import { Textarea } from '../components/Textarea';
 import {
   answerQuestionsSchema,
@@ -27,29 +28,23 @@ import {
 } from '../services/projects';
 import type { ProjectStatus } from '../types/api';
 import { getErrorMessage } from '../utils/errorMessage';
+import { getProjectStatusMeta } from '../utils/projectStatus';
 
-const statusHints: Record<ProjectStatus, string> = {
-  Draft: 'Projeto em rascunho. Gere perguntas de refinamento para continuar o fluxo.',
-  QuestionsGenerated: 'Perguntas geradas. Responda todas para habilitar a geracao do documento.',
-  QuestionsAnswered: 'Perguntas respondidas. Gere o documento tecnico inicial.',
-  DocumentGenerated: 'Documento gerado. Voce ja pode abrir a visualizacao completa.'
-};
-
-const statusLabels: Record<ProjectStatus, string> = {
-  Draft: 'Rascunho',
-  QuestionsGenerated: 'Perguntas geradas',
-  QuestionsAnswered: 'Perguntas respondidas',
-  DocumentGenerated: 'Documento gerado'
-};
+const orderedStatuses: ProjectStatus[] = [
+  'Draft',
+  'QuestionsGenerated',
+  'QuestionsAnswered',
+  'DocumentGenerated'
+];
 
 export function ProjectDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const queryClient = useQueryClient();
   const [apiError, setApiError] = useState<string | null>(null);
-  const [answerSuccess, setAnswerSuccess] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const projectId = useMemo(() => id ?? '', [id]);
+  const projectId = id ?? '';
 
   const projectQuery = useQuery({
     queryKey: ['projects', projectId],
@@ -118,6 +113,7 @@ export function ProjectDetailsPage() {
     onSuccess: (project) => {
       queryClient.setQueryData(['projects', projectId], project);
       queryClient.invalidateQueries({ queryKey: ['projects'] });
+      setSuccessMessage('Projeto atualizado com sucesso.');
     }
   });
 
@@ -134,6 +130,7 @@ export function ProjectDetailsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects', projectId] });
       queryClient.invalidateQueries({ queryKey: ['projects', projectId, 'questions'] });
+      setSuccessMessage('Perguntas geradas. Agora responda todas para continuar.');
     }
   });
 
@@ -142,7 +139,7 @@ export function ProjectDetailsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects', projectId] });
       queryClient.invalidateQueries({ queryKey: ['projects', projectId, 'questions'] });
-      setAnswerSuccess('Perguntas respondidas com sucesso.');
+      setSuccessMessage('Perguntas respondidas com sucesso.');
     }
   });
 
@@ -151,12 +148,18 @@ export function ProjectDetailsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects', projectId] });
       queryClient.invalidateQueries({ queryKey: ['projects', projectId, 'document'] });
-      navigate(`/projects/${projectId}/document`);
+      navigate(`/projects/${projectId}/document`, { state: { generated: true } });
     }
   });
 
-  const onSubmit = async (values: UpdateProjectFormValues) => {
+  const clearFeedback = () => {
     setApiError(null);
+    setSuccessMessage(null);
+  };
+
+  const onSubmit = async (values: UpdateProjectFormValues) => {
+    clearFeedback();
+
     try {
       await updateProjectMutation.mutateAsync(values);
     } catch (error) {
@@ -170,7 +173,8 @@ export function ProjectDetailsPage() {
       return;
     }
 
-    setApiError(null);
+    clearFeedback();
+
     try {
       await deleteProjectMutation.mutateAsync();
     } catch (error) {
@@ -179,7 +183,8 @@ export function ProjectDetailsPage() {
   };
 
   const onGenerateQuestions = async () => {
-    setApiError(null);
+    clearFeedback();
+
     try {
       await generateQuestionsMutation.mutateAsync();
     } catch (error) {
@@ -190,8 +195,7 @@ export function ProjectDetailsPage() {
   };
 
   const onAnswerQuestions = async (values: AnswerQuestionsFormValues) => {
-    setApiError(null);
-    setAnswerSuccess(null);
+    clearFeedback();
 
     const hasEmptyAnswer = values.answers.some((item) => !item.answer.trim());
     if (hasEmptyAnswer) {
@@ -212,7 +216,8 @@ export function ProjectDetailsPage() {
   };
 
   const onGenerateDocument = async () => {
-    setApiError(null);
+    clearFeedback();
+
     try {
       await generateDocumentMutation.mutateAsync();
     } catch (error) {
@@ -259,9 +264,26 @@ export function ProjectDetailsPage() {
     return <LoadingState description="Carregando detalhes do projeto..." />;
   }
 
+  const currentStatus = getProjectStatusMeta(project.status);
+  const isUpdatingProject = isSubmitting || updateProjectMutation.isPending;
+
   return (
     <>
-      <Card title="Detalhes do projeto" description="Fluxo principal do MVP guiado pelo status do projeto.">
+      <Card
+        title="Detalhes do projeto"
+        description="Acompanhe o status atual e execute apenas a proxima acao compativel."
+      >
+        <div className="mb-5 flex flex-wrap gap-3">
+          <Link to="/projects">
+            <Button variant="ghost">Voltar para projetos</Button>
+          </Link>
+          {project.status === 'DocumentGenerated' && (
+            <Link to={`/projects/${project.id}/document`}>
+              <Button variant="secondary">Ir para o documento</Button>
+            </Link>
+          )}
+        </div>
+
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-3xl bg-stone-100 p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Nome</p>
@@ -269,7 +291,7 @@ export function ProjectDetailsPage() {
           </div>
           <div className="rounded-3xl bg-stone-100 p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Status</p>
-            <p className="mt-3 text-sm text-slate-800">{statusLabels[project.status]}</p>
+            <p className="mt-3 text-sm text-slate-800">{currentStatus.label}</p>
           </div>
           <div className="rounded-3xl bg-stone-100 p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Criado em</p>
@@ -283,7 +305,31 @@ export function ProjectDetailsPage() {
           </div>
         </div>
 
-        <div className="mt-5 rounded-2xl bg-brand-50 p-4 text-sm text-brand-900">{statusHints[project.status]}</div>
+        <div className="mt-5 rounded-2xl bg-brand-50 p-4 text-sm text-brand-900">
+          <p>{currentStatus.hint}</p>
+          <p className="mt-2 font-semibold">Proximo passo: {currentStatus.nextStep}</p>
+        </div>
+
+        <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {orderedStatuses.map((status) => {
+            const statusMeta = getProjectStatusMeta(status);
+            const isCurrentStep = project.status === status;
+
+            return (
+              <div
+                key={status}
+                className={
+                  isCurrentStep
+                    ? 'rounded-2xl border border-brand-300 bg-brand-50 p-4'
+                    : 'rounded-2xl border border-slate-200 bg-white p-4'
+                }
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Etapa</p>
+                <p className="mt-2 text-sm font-semibold text-slate-900">{statusMeta.label}</p>
+              </div>
+            );
+          })}
+        </div>
 
         <div className="mt-4 flex flex-wrap gap-3">
           {project.status === 'Draft' && (
@@ -306,10 +352,14 @@ export function ProjectDetailsPage() {
         </div>
 
         <FormError message={apiError ?? undefined} />
+        {successMessage && <Notice variant="success">{successMessage}</Notice>}
       </Card>
 
       {project.status === 'QuestionsGenerated' && (
-        <Card title="Responder perguntas de refinamento" description="Responda todas as perguntas para continuar o fluxo.">
+        <Card
+          title="Responder perguntas de refinamento"
+          description="Preencha todas as respostas para liberar a geracao do documento tecnico."
+        >
           {questionsQuery.isLoading && <LoadingState description="Carregando perguntas geradas..." />}
 
           {questionsQuery.isError && (
@@ -323,8 +373,8 @@ export function ProjectDetailsPage() {
 
           {questionsQuery.isSuccess && questionsQuery.data.questions.length === 0 && (
             <EmptyState
-              title="Sem perguntas para responder"
-              description="Tente gerar perguntas novamente para continuar."
+              title="Perguntas ainda nao disponiveis"
+              description="As perguntas ainda nao foram disponibilizadas. Atualize a pagina ou tente gerar novamente mais tarde."
             />
           )}
 
@@ -339,6 +389,7 @@ export function ProjectDetailsPage() {
                   <Textarea
                     label="Resposta"
                     rows={3}
+                    disabled={answerQuestionsMutation.isPending}
                     {...answersForm.register(`answers.${index}.answer`)}
                   />
                   <FormError message={answersForm.formState.errors.answers?.[index]?.answer?.message} />
@@ -350,33 +401,33 @@ export function ProjectDetailsPage() {
               </Button>
 
               <FormError message={apiError ?? undefined} />
-              {answerSuccess && (
-                <p className="rounded-2xl bg-brand-50 px-4 py-3 text-sm text-brand-800">{answerSuccess}</p>
-              )}
             </form>
           )}
         </Card>
       )}
 
-      <Card title="Editar projeto" description="O status e controlado pelo backend e nao pode ser alterado manualmente.">
+      <Card
+        title="Editar projeto"
+        description="O status e controlado pelo backend e nao pode ser alterado manualmente."
+      >
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <Input label="Nome do projeto" {...register('name')} />
+          <Input label="Nome do projeto" disabled={isUpdatingProject} {...register('name')} />
           <FormError message={errors.name?.message} />
 
-          <Textarea label="Descricao inicial" {...register('initialDescription')} />
+          <Textarea label="Descricao inicial" disabled={isUpdatingProject} {...register('initialDescription')} />
           <FormError message={errors.initialDescription?.message} />
 
-          <Textarea label="Objetivo" {...register('goal')} />
+          <Textarea label="Objetivo" disabled={isUpdatingProject} {...register('goal')} />
           <FormError message={errors.goal?.message} />
 
-          <Input label="Publico-alvo" {...register('targetAudience')} />
+          <Input label="Publico-alvo" disabled={isUpdatingProject} {...register('targetAudience')} />
           <FormError message={errors.targetAudience?.message} />
 
           <div className="flex flex-wrap gap-3">
-            <Button type="submit" disabled={isSubmitting || updateProjectMutation.isPending}>
-              {isSubmitting || updateProjectMutation.isPending ? 'Salvando...' : 'Salvar alteracoes'}
+            <Button type="submit" disabled={isUpdatingProject}>
+              {isUpdatingProject ? 'Salvando...' : 'Salvar alteracoes'}
             </Button>
-            <Button type="button" variant="ghost" onClick={() => reset()} disabled={updateProjectMutation.isPending}>
+            <Button type="button" variant="ghost" onClick={() => reset()} disabled={isUpdatingProject}>
               Descartar edicao
             </Button>
           </div>

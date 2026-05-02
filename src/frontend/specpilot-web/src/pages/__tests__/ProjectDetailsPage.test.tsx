@@ -43,7 +43,7 @@ describe('ProjectDetailsPage', () => {
     renderWithProviders(<ProjectDetailsPage />, { route: '/projects/project-1', path: '/projects/:id' });
 
     expect(await screen.findByText('Projeto de teste')).toBeInTheDocument();
-    expect(screen.getByText('Rascunho')).toBeInTheDocument();
+    expect(screen.getAllByText('Rascunho').length).toBeGreaterThan(0);
   });
 
   it('exibe acao correta quando status e Draft', async () => {
@@ -52,6 +52,8 @@ describe('ProjectDetailsPage', () => {
     renderWithProviders(<ProjectDetailsPage />, { route: '/projects/project-1', path: '/projects/:id' });
 
     expect(await screen.findByRole('button', { name: /Gerar perguntas de refinamento/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Gerar documento/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /Visualizar documento/i })).not.toBeInTheDocument();
   });
 
   it('exibe formulario de respostas quando status e QuestionsGenerated', async () => {
@@ -66,6 +68,24 @@ describe('ProjectDetailsPage', () => {
 
     expect(await screen.findByText('Responder perguntas de refinamento')).toBeInTheDocument();
     expect(await screen.findByText(/Pergunta 1/i)).toBeInTheDocument();
+  });
+
+  it('exibe estado vazio orientativo quando ainda nao ha perguntas carregadas', async () => {
+    getProjectByIdMock.mockResolvedValueOnce(makeProject('QuestionsGenerated'));
+    getQuestionsMock.mockResolvedValueOnce({
+      projectId: 'project-1',
+      status: 'QuestionsGenerated',
+      questions: []
+    });
+
+    renderWithProviders(<ProjectDetailsPage />, { route: '/projects/project-1', path: '/projects/:id' });
+
+    expect(await screen.findByText('Perguntas ainda nao disponiveis')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'As perguntas ainda nao foram disponibilizadas. Atualize a pagina ou tente gerar novamente mais tarde.'
+      )
+    ).toBeInTheDocument();
   });
 
   it('exibe acao de gerar documento quando status e QuestionsAnswered', async () => {

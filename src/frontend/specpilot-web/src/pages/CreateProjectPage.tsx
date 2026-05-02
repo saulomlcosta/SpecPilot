@@ -53,22 +53,34 @@ export function CreateProjectPage() {
       description="Preencha os dados para criar um novo projeto no MVP."
     >
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <Input label="Nome do projeto" placeholder="Sistema de clinica" {...register('name')} />
+        <Input
+          label="Nome do projeto"
+          placeholder="Sistema de clinica"
+          disabled={isSubmitting || createProjectMutation.isPending}
+          {...register('name')}
+        />
         <FormError message={errors.name?.message} />
 
         <Textarea
           label="Descricao inicial"
           placeholder="Quero um sistema para agendamento, prontuario e notificacoes."
+          disabled={isSubmitting || createProjectMutation.isPending}
           {...register('initialDescription')}
         />
         <FormError message={errors.initialDescription?.message} />
 
-        <Textarea label="Objetivo" placeholder="Organizar o atendimento da clinica." {...register('goal')} />
+        <Textarea
+          label="Objetivo"
+          placeholder="Organizar o atendimento da clinica."
+          disabled={isSubmitting || createProjectMutation.isPending}
+          {...register('goal')}
+        />
         <FormError message={errors.goal?.message} />
 
         <Input
           label="Publico-alvo"
           placeholder="Equipe administrativa e medica"
+          disabled={isSubmitting || createProjectMutation.isPending}
           {...register('targetAudience')}
         />
         <FormError message={errors.targetAudience?.message} />

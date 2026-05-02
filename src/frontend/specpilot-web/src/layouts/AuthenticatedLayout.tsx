@@ -20,9 +20,9 @@ export function AuthenticatedLayout() {
             <Link to="/projects" className="text-xs font-semibold uppercase tracking-[0.28em] text-brand-700">
               SpecPilot AI
             </Link>
-            <h1 className="mt-2 font-serif text-3xl text-slate-900">Esqueleto do frontend do MVP</h1>
+            <h1 className="mt-2 font-serif text-3xl text-slate-900">Fluxo principal do MVP academico</h1>
             <p className="mt-2 text-sm text-slate-600">
-              Navegacao inicial para o fluxo de autenticacao, projetos, refinamento e documento tecnico.
+              Acompanhe cadastro, projetos, refinamento com IA e documento tecnico de forma guiada e didatica.
             </p>
           </div>
 

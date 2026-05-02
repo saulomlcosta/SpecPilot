@@ -1,16 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { EmptyState } from '../components/EmptyState';
 import { LoadingState } from '../components/LoadingState';
+import { Notice } from '../components/Notice';
 import { ApiError } from '../services/httpClient';
 import { getDocument } from '../services/projects';
 import { getErrorMessage } from '../utils/errorMessage';
 
 export function ProjectDocumentPage() {
   const { id } = useParams();
+  const location = useLocation();
   const projectId = id ?? '';
+  const generatedNow = Boolean((location.state as { generated?: boolean } | null)?.generated);
 
   const documentQuery = useQuery({
     queryKey: ['projects', projectId, 'document'],
@@ -60,7 +63,15 @@ export function ProjectDocumentPage() {
 
   return (
     <>
-      <Card title="Documento tecnico inicial" description="Resultado estruturado do fluxo de IA do MVP.">
+      <Card title="Documento tecnico inicial" description="Resultado estruturado do fluxo principal do MVP.">
+        {generatedNow && (
+          <div className="mb-5">
+            <Notice variant="success" title="Documento gerado com sucesso">
+              O fluxo principal foi concluido e o documento tecnico inicial ja esta disponivel para revisao.
+            </Notice>
+          </div>
+        )}
+
         <div className="space-y-5">
           <section>
             <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Visao geral</h3>
@@ -109,7 +120,10 @@ export function ProjectDocumentPage() {
         </div>
       </Card>
 
-      <div>
+      <div className="flex flex-wrap gap-3">
+        <Link to="/projects">
+          <Button variant="secondary">Voltar para projetos</Button>
+        </Link>
         <Link to={`/projects/${projectId}`}>
           <Button variant="ghost">Voltar ao projeto</Button>
         </Link>

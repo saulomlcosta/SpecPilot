@@ -43,13 +43,13 @@ export function RegisterPage() {
       description="Crie sua conta para iniciar os projetos do SpecPilot AI."
     >
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <Input label="Nome" placeholder="Saulo" {...register('name')} />
+        <Input label="Nome" placeholder="Saulo" disabled={isSubmitting} {...register('name')} />
         <FormError message={errors.name?.message} />
 
-        <Input label="Email" placeholder="saulo@example.com" {...register('email')} />
+        <Input label="Email" placeholder="saulo@example.com" disabled={isSubmitting} {...register('email')} />
         <FormError message={errors.email?.message} />
 
-        <Input label="Senha" placeholder="12345678" type="password" {...register('password')} />
+        <Input label="Senha" placeholder="12345678" type="password" disabled={isSubmitting} {...register('password')} />
         <FormError message={errors.password?.message} />
 
         <Button className="w-full" type="submit" variant="secondary" disabled={isSubmitting}>

@@ -197,3 +197,11 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - confirmadas as secoes do documento gerado: visao geral, requisitos funcionais, requisitos nao funcionais, casos de uso e riscos
 - reexecutados com sucesso `dotnet test src/backend/SpecPilot.sln`, `npm ci`, `npm run build`, `npm test` e `docker compose config`
 - atualizada a documentacao de Docker para refletir que o frontend ja cobre o fluxo funcional atual do MVP
+
+## 2026-05-02 - Prompt 18 concluido
+
+- refinados textos e navegacao do frontend para deixar o fluxo principal mais claro para avaliadores
+- centralizado o mapeamento amigavel de `ProjectStatus` e exibido o proximo passo conforme a etapa atual do projeto
+- adicionados feedbacks de sucesso e estados disabled em acoes principais de autenticacao, projetos, refinamento e documento
+- reforcado o tratamento de `ProblemDetails` no frontend para esconder detalhes tecnicos em erros internos
+- validados `npm run build`, `npm test`, `dotnet test src/backend/SpecPilot.sln` e `docker compose config`
