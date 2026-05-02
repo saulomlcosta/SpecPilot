@@ -175,3 +175,13 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - a hipotese mais provavel e que a execucao antiga do workflow rodou em commit anterior ao `882f4f2` ou em branch ainda nao atualizada
 - o CI deve continuar usando `npm ci`, sem substituir por `npm install`, porque o comportamento correto em pipeline e validar precisamente o lockfile versionado
 - sera criado apenas um commit vazio para disparar nova execucao do GitHub Actions no `HEAD` atual, sem alterar codigo funcional, dependencias ou workflow
+
+## 2026-05-02 - Diagnostico definitivo da falha de npm ci no frontend
+
+- o erro recorrente do GitHub Actions continuou apontando ausencia de `@emnapi/core@1.10.0`, `@emnapi/runtime@1.10.0` e `esbuild@0.28.0` durante `npm ci`
+- a investigacao local confirmou que `package-lock.json` tinha referencias textuais a esses pacotes, mas nao continha estruturalmente `packages["node_modules/@emnapi/core"]`, `packages["node_modules/@emnapi/runtime"]` e `packages["node_modules/vitest/node_modules/esbuild"]`
+- a raiz `packages[""]` do lockfile estava coerente com `package.json`, entao a causa raiz nao era dependencia declarada fora do lugar, e sim lockfile incompleto para o resolvedor usado no CI
+- o lockfile foi regenerado no frontend com `npm` 10, alinhado ao ecossistema do runner com Node 20, passando a materializar corretamente os nos ausentes no mapa `packages`
+- apos a regeneracao, `npm ci`, `npm run build` e `npm test` passaram localmente no frontend, sem alteracao funcional de codigo
+- o workflow foi mantido com `npm ci` e recebeu apenas um passo temporario de diagnostico para a proxima execucao confirmar commit, diretorio e estrutura real do lockfile lido pelo runner
+- a decisao permanece a mesma: nao substituir `npm ci` por `npm install` no CI, porque o objetivo da pipeline e validar exatamente o lockfile versionado

@@ -46,6 +46,18 @@ jobs:
           cache: npm
           cache-dependency-path: src/frontend/specpilot-web/package-lock.json
 
+      - name: Diagnosticar contexto do frontend no CI
+        run: |
+          pwd
+          ls -la
+          node --version
+          npm --version
+          git rev-parse HEAD
+          git log --oneline -5
+          test -f package.json && echo "package.json encontrado"
+          test -f package-lock.json && echo "package-lock.json encontrado"
+          node -e "const fs=require('fs'); const lock=JSON.parse(fs.readFileSync('package-lock.json','utf8')); console.log('lockfileVersion', lock.lockfileVersion); console.log('root package name', lock.packages?.['']?.name); console.log('has @emnapi/core', Boolean(lock.packages?.['node_modules/@emnapi/core'])); console.log('has @emnapi/runtime', Boolean(lock.packages?.['node_modules/@emnapi/runtime'])); console.log('has esbuild', Boolean(lock.packages?.['node_modules/esbuild'])); console.log('has vitest esbuild 0.28.0', Boolean(lock.packages?.['node_modules/vitest/node_modules/esbuild'])); console.log('root deps', lock.packages?.['']?.dependencies); console.log('root devDeps', lock.packages?.['']?.devDependencies);"
+
       - name: Instalar dependencias do frontend
         run: npm ci
 
