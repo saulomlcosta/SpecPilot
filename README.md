@@ -334,6 +334,7 @@ Os prompts de runtime seguem CO-STAR e os prompts do Codex registram o processo 
 ## Documentacao complementar
 
 - [docs/development-log.md](docs/development-log.md)
+- [docs/14-evaluation-checklist.md](docs/14-evaluation-checklist.md)
 
 ## Convencao de commits
 

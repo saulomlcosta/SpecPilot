@@ -205,3 +205,9 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - adicionados feedbacks de sucesso e estados disabled em acoes principais de autenticacao, projetos, refinamento e documento
 - reforcado o tratamento de `ProblemDetails` no frontend para esconder detalhes tecnicos em erros internos
 - validados `npm run build`, `npm test`, `dotnet test src/backend/SpecPilot.sln` e `docker compose config`
+
+## 2026-05-02 - Prompt 19 concluido
+
+- criado `docs/14-evaluation-checklist.md` com roteiro didatico para avaliadores validarem execucao, fluxo principal, uso de IA, testes, CI e limitacoes do MVP
+- atualizado o README com link direto para o checklist de avaliacao
+- registrado o proprio Prompt 19 em `prompts/codex/19-create-evaluation-checklist.md`
