@@ -96,3 +96,9 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - reforcados cenarios de `ProblemDetails` para validacao e acesso indevido
 - fixado `Ai__Provider=Fake` na infraestrutura de testes de integracao
 - ajustadas verificacoes de persistencia para `AsNoTracking()` e consultas assincronas
+
+## 2026-05-01 - Prompt 12a concluido
+
+- adicionada pipeline de GitHub Actions para restore, build e testes do backend
+- fixado `Ai__Provider=Fake` no workflow para evitar chamadas reais a OpenAI
+- documentada a decisao de nao subir PostgreSQL no CI porque os testes de integracao atuais usam banco em memoria

@@ -249,6 +249,12 @@ dotnet test src/backend/SpecPilot.sln
 
 Quando os testes de fluxo do MVP forem ampliados, o `FakeAiService` continuara sendo o comportamento padrao para garantir reprodutibilidade.
 
+## Integracao continua
+
+O repositorio possui um workflow de GitHub Actions em `.github/workflows/backend-ci.yml` para validar automaticamente o backend em `push` e `pull_request`.
+
+Essa pipeline executa restore, build e testes da solution em `src/backend`, usando `FakeAiService` para manter o fluxo do MVP previsivel, sem depender de OpenAI real. Isso reforca qualidade, confiabilidade e rastreabilidade do projeto.
+
 ## Prompts do projeto
 
 O repositorio separa dois tipos de prompts:

@@ -20,6 +20,7 @@
 - tratar respostas de providers de IA como entrada externa nao confiavel
 - manter chaves e modelos de IA apenas em configuracao por variavel de ambiente
 - encapsular detalhes HTTP de providers apenas na Infrastructure
+- usar integracao continua para validar restore, build e testes de forma automatica
 
 ## Result Pattern neste projeto
 
@@ -90,3 +91,7 @@ Toda implementacao futura deve conseguir responder:
 - por que foi feita assim
 - como pode ser testada
 - qual decisao arquitetural a sustenta
+
+## Integracao continua neste projeto
+
+A integracao continua deve ser simples, didatica e coerente com o MVP. Para este repositorio, isso significa validar automaticamente o backend com GitHub Actions, sem segredos reais, sem deploy e sem dependencia de OpenAI real.

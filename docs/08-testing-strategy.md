@@ -43,6 +43,7 @@ Devem cobrir:
 - cenarios felizes e invalidos devem ser cobertos
 - cenarios de erro HTTP devem validar status e formato padronizado da resposta
 - verificacoes de persistencia devem preferir consultas `AsNoTracking()` e chamadas assincronas
+- os testes do backend tambem devem ser executados automaticamente no CI
 
 ## Aplicacao ao servico de IA
 
@@ -55,3 +56,9 @@ Devem cobrir:
 ## Beneficio didatico
 
 Essa estrategia ajuda a demonstrar separacao de responsabilidades e confiabilidade sem exigir infraestrutura externa complexa.
+
+## Aplicacao no CI
+
+O repositorio usa GitHub Actions para executar restore, build e testes do backend em cada `push` e `pull_request`.
+
+Como os testes de integracao atuais usam banco em memoria com `WebApplicationFactory`, nao ha necessidade de configurar PostgreSQL manualmente no workflow nesta etapa. O CI fixa `Ai__Provider=Fake` para impedir chamadas reais a OpenAI.
