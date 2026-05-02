@@ -165,3 +165,13 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - sincronizado `src/frontend/specpilot-web/package-lock.json` com `package.json` via `npm install`
 - validado localmente o fluxo do CI frontend com `npm ci`, `npm run build` e `npm test`
 - mantido o workflow usando `npm ci` no GitHub Actions, sem alterar escopo funcional
+
+## 2026-05-02 - Reexecucao do CI apos sincronizacao do package-lock
+
+- o erro original do GitHub Actions ocorreu no job Frontend durante `npm ci`, apontando `package-lock.json` fora de sincronia com `package.json`
+- o log do CI indicou ausencia de `@emnapi/core@1.10.0`, `@emnapi/runtime@1.10.0` e `esbuild@0.28.0` no lockfile
+- o commit `882f4f2 fix(frontend): sync npm lock file` ja registrou a correcao do lockfile do frontend
+- no `HEAD` atual, `src/frontend/specpilot-web/package-lock.json` ja contem as dependencias reclamadas pelo workflow que falhou
+- a hipotese mais provavel e que a execucao antiga do workflow rodou em commit anterior ao `882f4f2` ou em branch ainda nao atualizada
+- o CI deve continuar usando `npm ci`, sem substituir por `npm install`, porque o comportamento correto em pipeline e validar precisamente o lockfile versionado
+- sera criado apenas um commit vazio para disparar nova execucao do GitHub Actions no `HEAD` atual, sem alterar codigo funcional, dependencias ou workflow
