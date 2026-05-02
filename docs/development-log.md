@@ -229,3 +229,11 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - criado `docs/15-release-notes.md` para registrar oficialmente a entrega da versao MVP 1.0
 - atualizado o README com link para as release notes academicas
 - salvo o Prompt 22 em `prompts/codex/22-create-release-notes.md`
+
+## 2026-05-02 - Prompt 23 concluido
+
+- executada a verificacao final de entrega com sucesso em backend, frontend, Docker Compose e documentacao principal
+- validados `dotnet test src/backend/SpecPilot.sln`, `npm ci`, `npm run build`, `npm test`, `docker compose config`, `docker compose down -v`, `docker compose up --build -d` e `docker compose ps`
+- confirmados os documentos finais do MVP: README storytelling, checklist de avaliacao, release notes, ADRs, prompts runtime, prompts Codex e development log
+- confirmada a configuracao com `FakeAiService` como provider padrao, `OpenAI` opcional e ausencia de chamada direta do frontend para OpenAI
+- verificado que os itens fora do escopo permanecem documentados apenas como limitacoes ou proximos passos
