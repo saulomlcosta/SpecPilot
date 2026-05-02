@@ -111,3 +111,9 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - adicionado `GET /api/projects/{id}/questions` para o frontend recuperar `questionId` sem depender de acesso ao banco
 - validado o fluxo principal completo em Docker com `Fake` como provider registrado em `AiInteractionLog`
 - registrado roteiro manual para validacao futura do fluxo principal do MVP
+
+## 2026-05-02 - Cobertura de integracao do endpoint de perguntas
+
+- adicionada cobertura de integracao para `GET /api/projects/{id}/questions` com acesso negado a projeto de outro usuario
+- ajustada a jornada principal automatizada para usar `GET /questions` e os `questionId` reais antes de responder o refinamento
+- ampliada a validacao do fluxo completo para conferir provider `Fake` e os dois `AiInteractionLog` esperados

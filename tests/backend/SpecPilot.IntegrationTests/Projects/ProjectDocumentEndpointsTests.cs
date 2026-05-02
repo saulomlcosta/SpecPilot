@@ -4,7 +4,6 @@ using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SpecPilot.Domain.Entities;
 using SpecPilot.Domain.Enums;
 using SpecPilot.Infrastructure.Persistence;
 using SpecPilot.IntegrationTests.Auth;
@@ -160,23 +159,52 @@ public class ProjectDocumentEndpointsTests : IClassFixture<SpecPilotApiFactory>
 
         var createdProject = await createProjectResponse.Content.ReadFromJsonAsync<ProjectResponseContract>();
         createdProject.Should().NotBeNull();
+        createdProject!.Status.Should().Be("Draft");
 
         var generateQuestionsResponse = await client.PostAsync($"/api/projects/{createdProject!.Id}/generate-questions", content: null);
         generateQuestionsResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        var generatedQuestions = await LoadGeneratedQuestionsAsync(createdProject.Id);
+        var generatedQuestionsBody = await generateQuestionsResponse.Content.ReadFromJsonAsync<GenerateQuestionsResponseContract>();
+        generatedQuestionsBody.Should().NotBeNull();
+        generatedQuestionsBody!.Status.Should().Be("QuestionsGenerated");
+
+        var getQuestionsResponse = await client.GetAsync($"/api/projects/{createdProject.Id}/questions");
+        getQuestionsResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var generatedQuestionsBodyWithIds = await getQuestionsResponse.Content.ReadFromJsonAsync<GetQuestionsResponseContract>();
+        generatedQuestionsBodyWithIds.Should().NotBeNull();
+        generatedQuestionsBodyWithIds!.Status.Should().Be("QuestionsGenerated");
+        generatedQuestionsBodyWithIds.Questions.Should().HaveCount(5);
+        generatedQuestionsBodyWithIds.Questions.Should().OnlyContain(x => x.Id != Guid.Empty);
+
+        var projectAfterQuestionsResponse = await client.GetAsync($"/api/projects/{createdProject.Id}");
+        projectAfterQuestionsResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var projectAfterQuestions = await projectAfterQuestionsResponse.Content.ReadFromJsonAsync<ProjectResponseContract>();
+        projectAfterQuestions.Should().NotBeNull();
+        projectAfterQuestions!.Status.Should().Be("QuestionsGenerated");
 
         var answerQuestionsResponse = await client.PutAsJsonAsync($"/api/projects/{createdProject.Id}/questions/answers", new
         {
-            answers = generatedQuestions.Select((question, index) => new
+            answers = generatedQuestionsBodyWithIds.Questions.Select((question, index) => new
             {
                 questionId = question.Id,
                 answer = $"Resposta da jornada {index + 1}"
             })
         });
         answerQuestionsResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var answerQuestionsBody = await answerQuestionsResponse.Content.ReadFromJsonAsync<AnswerQuestionsResponseContract>();
+        answerQuestionsBody.Should().NotBeNull();
+        answerQuestionsBody!.Status.Should().Be("QuestionsAnswered");
+
+        var projectAfterAnswersResponse = await client.GetAsync($"/api/projects/{createdProject.Id}");
+        projectAfterAnswersResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var projectAfterAnswers = await projectAfterAnswersResponse.Content.ReadFromJsonAsync<ProjectResponseContract>();
+        projectAfterAnswers.Should().NotBeNull();
+        projectAfterAnswers!.Status.Should().Be("QuestionsAnswered");
 
         var generateDocumentResponse = await client.PostAsync($"/api/projects/{createdProject.Id}/generate-document", content: null);
         generateDocumentResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var generatedDocument = await generateDocumentResponse.Content.ReadFromJsonAsync<ProjectDocumentResponseContract>();
+        generatedDocument.Should().NotBeNull();
+        generatedDocument!.Status.Should().Be("DocumentGenerated");
 
         var getDocumentResponse = await client.GetAsync($"/api/projects/{createdProject.Id}/document");
         getDocumentResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -193,6 +221,16 @@ public class ProjectDocumentEndpointsTests : IClassFixture<SpecPilotApiFactory>
         using var scope = _factory.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<SpecPilotDbContext>();
         (await context.AiInteractionLogs.AsNoTracking().CountAsync(x => x.ProjectId == createdProject.Id)).Should().Be(2);
+        (await context.AiInteractionLogs.AsNoTracking()
+            .Where(x => x.ProjectId == createdProject.Id)
+            .Select(x => x.Provider)
+            .Distinct()
+            .ToListAsync()).Should().Equal("Fake");
+        (await context.AiInteractionLogs.AsNoTracking()
+            .Where(x => x.ProjectId == createdProject.Id)
+            .Select(x => x.InteractionType)
+            .OrderBy(x => x)
+            .ToListAsync()).Should().Equal("GenerateProjectDocument", "GenerateRefinementQuestions");
         (await context.Projects.AsNoTracking().SingleAsync(x => x.Id == createdProject.Id)).Status.Should().Be(ProjectStatus.DocumentGenerated);
     }
 
@@ -227,34 +265,18 @@ public class ProjectDocumentEndpointsTests : IClassFixture<SpecPilotApiFactory>
         return body!.Id;
     }
 
-    private async Task<List<RefinementQuestion>> GenerateQuestionsAsync(HttpClient client, Guid projectId)
+    private async Task<List<QuestionItemContract>> GenerateQuestionsAsync(HttpClient client, Guid projectId)
     {
         using var response = await client.PostAsync($"/api/projects/{projectId}/generate-questions", content: null);
         response.EnsureSuccessStatusCode();
 
-        return await LoadGeneratedQuestionsAsync(projectId);
+        using var getQuestionsResponse = await client.GetAsync($"/api/projects/{projectId}/questions");
+        getQuestionsResponse.EnsureSuccessStatusCode();
+        var body = await getQuestionsResponse.Content.ReadFromJsonAsync<GetQuestionsResponseContract>();
+        return body!.Questions;
     }
 
-    private async Task<List<RefinementQuestion>> LoadGeneratedQuestionsAsync(Guid projectId)
-    {
-
-        using var scope = _factory.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<SpecPilotDbContext>();
-        return await context.RefinementQuestions
-            .AsNoTracking()
-            .Where(x => x.ProjectId == projectId)
-            .OrderBy(x => x.Order)
-            .Select(x => new RefinementQuestion
-            {
-                Id = x.Id,
-                ProjectId = x.ProjectId,
-                Order = x.Order,
-                QuestionText = x.QuestionText
-            })
-            .ToListAsync();
-    }
-
-    private static async Task AnswerQuestionsAsync(HttpClient client, Guid projectId, List<RefinementQuestion> questions)
+    private static async Task AnswerQuestionsAsync(HttpClient client, Guid projectId, List<QuestionItemContract> questions)
     {
         using var response = await client.PutAsJsonAsync($"/api/projects/{projectId}/questions/answers", new
         {
@@ -276,6 +298,35 @@ public class ProjectDocumentEndpointsTests : IClassFixture<SpecPilotApiFactory>
     private sealed class ProjectResponseContract
     {
         public Guid Id { get; set; }
+        public string Status { get; set; } = string.Empty;
+    }
+
+    private sealed class GenerateQuestionsResponseContract
+    {
+        public Guid ProjectId { get; set; }
+        public string Status { get; set; } = string.Empty;
+        public List<string> Questions { get; set; } = [];
+    }
+
+    private sealed class GetQuestionsResponseContract
+    {
+        public Guid ProjectId { get; set; }
+        public string Status { get; set; } = string.Empty;
+        public List<QuestionItemContract> Questions { get; set; } = [];
+    }
+
+    private sealed class QuestionItemContract
+    {
+        public Guid Id { get; set; }
+        public int Order { get; set; }
+        public string QuestionText { get; set; } = string.Empty;
+        public string? Answer { get; set; }
+    }
+
+    private sealed class AnswerQuestionsResponseContract
+    {
+        public Guid ProjectId { get; set; }
+        public string Status { get; set; } = string.Empty;
     }
 
     private sealed class ProjectDocumentResponseContract

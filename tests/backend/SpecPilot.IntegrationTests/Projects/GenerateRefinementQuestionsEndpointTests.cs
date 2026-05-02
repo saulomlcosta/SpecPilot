@@ -76,6 +76,22 @@ public class GenerateRefinementQuestionsEndpointTests : IClassFixture<SpecPilotA
     }
 
     [Fact]
+    public async Task Should_return_not_found_when_other_user_gets_questions_from_project()
+    {
+        var clientA = await CreateAuthenticatedClientAsync();
+        var clientB = await CreateAuthenticatedClientAsync();
+        var projectId = await CreateProjectAsync(clientA);
+
+        await clientA.PostAsync($"/api/projects/{projectId}/generate-questions", content: null);
+        var response = await clientB.GetAsync($"/api/projects/{projectId}/questions");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Extensions["code"].GetString().Should().Be("projects.not_found");
+    }
+
+    [Fact]
     public async Task Should_return_conflict_when_project_is_not_in_draft_status()
     {
         var client = await CreateAuthenticatedClientAsync();
