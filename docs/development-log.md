@@ -211,3 +211,9 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - criado `docs/14-evaluation-checklist.md` com roteiro didatico para avaliadores validarem execucao, fluxo principal, uso de IA, testes, CI e limitacoes do MVP
 - atualizado o README com link direto para o checklist de avaliacao
 - registrado o proprio Prompt 19 em `prompts/codex/19-create-evaluation-checklist.md`
+
+## 2026-05-02 - Prompt 20 concluido
+
+- reescrito o `README.md` final em formato storytelling, com foco academico, didatico e profissional
+- explicadas as duas dimensoes de uso de IA: dentro do produto e durante o desenvolvimento com Codex
+- documentados prompts versionados, human-in-the-loop, skills/superpowers, Docker, testes, CI e principais decisoes arquiteturais

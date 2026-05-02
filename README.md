@@ -1,178 +1,301 @@
 # SpecPilot AI
 
-## Descricao do projeto
+## Resumo
 
-O **SpecPilot AI** e uma aplicacao web educacional focada em apoiar a fase inicial de especificacao de software. O usuario descreve a ideia de um sistema, recebe perguntas de refinamento geradas por IA, responde essas perguntas e, ao final, obtem uma documentacao tecnica inicial para orientar os primeiros passos do projeto.
+O SpecPilot AI e um MVP academico de apoio a especificacao inicial de software. A proposta do projeto e transformar uma ideia ainda vaga em um primeiro documento tecnico mais claro, usando IA Generativa de forma controlada, rastreavel e compatível com um processo de engenharia bem documentado.
 
-Este repositorio foi preparado com foco didatico para uma pos-graduacao em IA Generativa. Nesta etapa, ele contem a base documental, a estrutura do projeto e os acordos de engenharia que orientarao a implementacao do MVP.
+## A historia do projeto
 
-## Leitura rapida para a banca
+Muitas ideias de software nascem de uma conversa curta, de uma intuicao de produto ou de uma necessidade percebida no dia a dia. O problema e que, nesse momento inicial, quase nada costuma estar realmente claro. Quem sao os usuarios? O que entra na primeira versao? Quais riscos ja aparecem cedo? O que parece obvio para quem imaginou a solucao ainda nao esta organizado como requisito.
 
-Se esta for a primeira leitura do projeto, a sequencia recomendada e:
+Em muitos cenarios, a documentacao inicial acaba sendo negligenciada. A equipe pula direto para a implementacao, os requisitos ficam incompletos, surgem contradicoes, o entendimento muda ao longo do caminho e o retrabalho aparece cedo. O que deveria ser uma etapa de alinhamento vira uma etapa improvisada.
 
-1. entender o problema e o objetivo neste README
-2. consultar a arquitetura em `docs/03-architecture.md`
-3. verificar o uso de IA em `docs/04-ai-usage.md`
-4. revisar as ADRs em `docs/adr/`
+O SpecPilot AI nasce exatamente nesse ponto. A ideia central do projeto e usar IA Generativa nao como um chat livre nem como um substituto do julgamento humano, mas como apoio estruturado para o refinamento inicial da ideia. Em vez de prometer automacao excessiva, o sistema conduz um fluxo pequeno, didatico e intencional: entender melhor a ideia, levantar perguntas uteis e consolidar um documento tecnico inicial.
 
 ## Problema
 
-Muitas ideias de software comecam com descricoes vagas, incompletas ou ambiguas. Isso dificulta o alinhamento entre problema, requisitos, riscos e prioridades tecnicas.
+O projeto resolve um problema comum na fase inicial de ideacao de software: ideias vagas demais para virarem requisitos consistentes com seguranca. Sem uma etapa de refinamento, e facil iniciar implementacao cedo demais, com entendimento incompleto, documentacao fraca e pouca visibilidade de riscos.
 
-Sem um processo de refinamento, e comum que:
+## Objetivo academico
 
-- requisitos importantes fiquem ocultos
-- restricoes nao sejam consideradas cedo
-- a equipe comece a construir sem entendimento compartilhado
-- a documentacao inicial fique inconsistente ou superficial
+Este projeto foi desenvolvido como um MVP academico de pos-graduacao em IA Generativa. Por isso, ele busca demonstrar nao apenas uma funcionalidade com IA dentro do produto, mas tambem um processo de engenharia assistido por IA, com escopo controlado, documentacao versionada, testes, Docker, CI e revisao humana.
 
-## Objetivo
+## O que o SpecPilot AI faz
 
-Criar uma aplicacao simples que use IA Generativa para transformar uma ideia inicial em uma base de documentacao tecnica mais clara, objetiva e reaproveitavel.
+O fluxo principal do produto e simples e direto:
+
+1. o usuario cria conta;
+2. cria um projeto;
+3. descreve a ideia inicial;
+4. a IA gera perguntas de refinamento;
+5. o usuario responde essas perguntas;
+6. a IA gera um documento tecnico inicial;
+7. o usuario visualiza o resultado final.
+
+Na pratica, isso permite sair de uma descricao ainda imprecisa para um artefato inicial com visao geral, requisitos funcionais, requisitos nao funcionais, casos de uso e riscos.
 
 ## Escopo do MVP
 
-O MVP permite:
+O que esta incluido:
 
-- cadastro de usuario
-- login simples
-- criacao de projeto
-- descricao inicial da ideia do sistema
-- geracao de perguntas de refinamento com IA
-- resposta das perguntas pelo usuario
-- geracao de documento inicial com as secoes: visao geral, requisitos funcionais, requisitos nao funcionais, casos de uso e riscos
+- autenticacao;
+- gerenciamento de projetos;
+- geracao de perguntas de refinamento;
+- resposta das perguntas;
+- geracao de documento tecnico inicial;
+- visualizacao do documento;
+- Docker e Docker Compose;
+- testes automatizados;
+- CI com GitHub Actions;
+- documentacao em `docs/`;
+- prompts versionados em `prompts/runtime/` e `prompts/codex/`.
 
-Fora do MVP:
+## Fora do escopo do MVP
 
-- RAG
-- upload de arquivos
-- PDF
-- chat livre
-- microservicos
-- Kafka
-- RabbitMQ
-- multiplos agentes
-- integracao com GitHub
-- geracao de codigo pelo sistema
-- dashboard complexo
-- colaboracao multiusuario
+O que ficou explicitamente fora desta etapa:
 
-## Onde a IA e usada
+- RAG;
+- upload de arquivos;
+- exportacao PDF;
+- chat livre;
+- multiplos agentes;
+- microservicos;
+- Kafka ou RabbitMQ;
+- deploy cloud;
+- colaboracao multiusuario.
 
-A IA Generativa sera usada em dois momentos principais:
+Esses itens ficaram fora de forma proposital para manter o MVP pequeno, testavel, bem documentado e coerente com os objetivos academicos do projeto.
 
-1. **Geracao de perguntas de refinamento**
-   A partir da descricao inicial do usuario, o sistema produz perguntas para reduzir ambiguidades e levantar requisitos ausentes.
+## Duas dimensoes de uso de IA
 
-2. **Geracao do documento inicial**
-   Com base na descricao inicial e nas respostas do refinamento, o sistema monta uma primeira versao estruturada da documentacao tecnica.
+O SpecPilot AI usa IA em duas dimensoes complementares:
 
-Por que usar IA aqui:
+1. IA dentro do produto.
+2. IA durante o desenvolvimento.
 
-- acelerar a fase de descoberta
-- melhorar a qualidade da especificacao inicial
-- estimular pensamento estruturado
-- apoiar usuarios que ainda nao dominam engenharia de requisitos
+Essa escolha foi proposital. O projeto nao quis demonstrar apenas uma funcionalidade com IA para o usuario final. Ele tambem quis demonstrar um processo de engenharia assistido por IA, com controle humano, rastreabilidade no repositorio e limitacao clara de escopo.
 
-O projeto deve funcionar **sem chave externa** usando `FakeAiService`. O provider OpenAI sera opcional e controlado por variavel de ambiente.
+## IA dentro do produto
 
-O provider padrao continua sendo `Fake`, garantindo execucao local e testes sem dependencias externas. Quando desejado, a OpenAI pode ser habilitada por configuracao sem alterar a `Application`.
+Dentro do produto, a IA aparece em dois momentos:
 
-## O que esta pronto nesta etapa
+- geracao de perguntas de refinamento;
+- geracao do documento tecnico inicial.
 
-Nesta fase, o repositorio entrega:
+O fluxo foi desenhado para que o frontend nunca chame OpenAI diretamente. Toda integracao com IA fica centralizada no backend, atras de uma abstracao unica. Isso permite manter validacao, rastreabilidade, controle de provider e tratamento de falhas no lugar certo.
 
-- documentacao funcional e arquitetural
-- esqueleto inicial do backend em .NET 8
-- esqueleto inicial do frontend em React + TypeScript
-- prompts de runtime e de desenvolvimento assistido por IA
-- ADRs iniciais
-- configuracao base de ambiente com PostgreSQL e API via Docker Compose
+Pontos importantes desta camada:
 
-Nesta fase, o repositorio ainda nao entrega:
+- `FakeAiService` e o provider padrao;
+- OpenAI e opcional via variavel de ambiente;
+- os prompts de runtime ficam em `prompts/runtime/`;
+- os prompts seguem o metodo CO-STAR;
+- as respostas sao solicitadas em JSON estruturado;
+- o backend valida o formato antes de seguir no fluxo;
+- interacoes de IA podem ser registradas por meio de `AiInteractionLog`;
+- a integracao real com OpenAI usa `HttpClient` apenas na camada de `Infrastructure`.
 
-- frontend funcional completo conectado a todo o fluxo do MVP
-- integracao real com OpenAI
+## Como a IA foi controlada dentro do produto
 
-## Arquitetura prevista
+A IA dentro do produto nao foi tratada como uma caixa-preta sem governanca. O controle foi feito por varios mecanismos complementares:
+
+- prompts estruturados em CO-STAR;
+- exigencia de resposta em JSON estruturado;
+- validacao do payload retornado;
+- uso de `Result` e `Result<T>` para falhas esperadas;
+- uso de `ProblemDetails` na representacao HTTP de erros;
+- rastreabilidade de interacoes com IA em `AiInteractionLog`;
+- `FakeAiService` como comportamento padrao para execucao local e testes;
+- revisao humana das decisoes de arquitetura e escopo;
+- documentacao das decisoes no repositorio.
+
+Em outras palavras, a IA ajuda a produzir saidas uteis, mas o produto foi desenhado para controlar bem onde ela entra, o que ela deve retornar e como o sistema reage em caso de erro.
+
+## IA no desenvolvimento: Codex, prompts e human-in-the-loop
+
+O desenvolvimento do SpecPilot AI tambem usou IA de forma proposital e controlada. O Codex foi utilizado como agente auxiliar de desenvolvimento, mas nao como um sistema solto recebendo um unico prompt generico do tipo "crie tudo". O projeto foi dividido em pequenas etapas, cada uma com objetivo claro, escopo delimitado e validacoes concretas.
+
+Cada etapa foi registrada em prompts sequenciais dentro de `prompts/codex/`. Esses prompts descreviam o contexto, o objetivo da etapa, tarefas, restricoes, criterios de aceite, comandos de validacao e ate a mensagem de commit esperada. Isso ajudou a transformar o desenvolvimento assistido por IA em um processo rastreavel, auditavel e reproduzivel.
+
+O Codex era constantemente orientado a ler `README.md`, `AGENTS.md` e os documentos relevantes em `docs/` antes de alterar qualquer coisa. O [AGENTS.md](AGENTS.md) funcionou como guia de comportamento do agente, reforcando limites de escopo, exigencia de documentacao, foco didatico e respeito ao MVP. O [docs/development-log.md](docs/development-log.md) registrou marcos, problemas, retomadas de contexto e decisoes importantes ao longo do trabalho. As ADRs em [docs/adr](docs/adr) registraram as escolhas arquiteturais centrais.
+
+O papel humano foi essencial durante todo o processo. O humano atuou como revisor, decisor e limitador de escopo. Decisoes relevantes como uso de Result Pattern, `ProblemDetails`, Docker Compose, GitHub Actions, protecao de `ProjectStatus`, estrategia de testes e limites do MVP foram validadas com revisao humana. A IA sugeria, implementava e validava; o humano revisava, aprovava, corrigia a direcao e controlava o que podia ou nao entrar.
+
+O trabalho tambem contou, quando aplicavel, com skills e superpowers do ambiente de desenvolvimento. Elas funcionaram como apoio metodologico, nao como substitutas do julgamento humano. Entre os apoios usados ao longo das etapas:
+
+- `brainstorming`, para estruturar abordagens antes de implementar;
+- `systematic-debugging`, para investigar falhas reais, como o problema de `npm ci` e `package-lock` no CI;
+- `test-driven-development`, quando aplicavel, especialmente em fluxos de backend e testes;
+- `verification-before-completion`, para exigir validacao antes de concluir etapas.
+
+Essa combinacao foi importante porque a memoria permanente do projeto nao ficou na conversa com a IA, e sim no proprio repositorio: prompts versionados, commits pequenos, development log, ADRs, testes, Docker e CI.
 
 ```mermaid
 flowchart LR
-    U[Usuario] --> F[Frontend React + TypeScript]
-    F --> B[Backend ASP.NET Core Web API]
-    B --> DB[(PostgreSQL)]
-    B --> AI{IA Provider}
-    AI --> FAKE[FakeAiService]
-    AI --> OPENAI[OpenAI Provider Opcional]
+    Human[Humano / Revisor] --> Prompt[Prompt versionado]
+    Prompt --> Codex[Codex]
+    Codex --> Changes[Codigo, testes e documentacao]
+    Changes --> Validation[Validacao: testes, Docker e CI]
+    Validation --> Commit[Commit convencional]
+    Commit --> Next[Proxima etapa]
+    Human --> Validation
 ```
 
-## Fluxo principal do MVP
+Essa abordagem foi usada para evitar:
+
+- escopo descontrolado;
+- decisoes nao documentadas;
+- dependencia da memoria da conversa;
+- codigo sem teste;
+- entregas dificeis de reproduzir.
+
+## Metodo CO-STAR
+
+Os prompts de runtime usam o metodo CO-STAR para deixar a interacao com IA mais clara, consistente e auditavel.
+
+- **Context**: em que contexto a IA esta operando.
+- **Objective**: o que ela precisa produzir.
+- **Style**: como a resposta deve ser estruturada.
+- **Tone**: qual tom deve adotar.
+- **Audience**: para quem a resposta foi pensada.
+- **Response**: qual formato de saida deve ser retornado.
+
+Os prompts podem ser consultados em [prompts/runtime](prompts/runtime).
+
+## Arquitetura
+
+O projeto adota uma arquitetura monolitica modular, com separacao clara entre frontend, API, aplicacao, dominio, infraestrutura, banco e provider de IA.
+
+```mermaid
+flowchart TD
+    FE[Frontend React]
+    API[ASP.NET Core API]
+    APP[Application]
+    DOMAIN[Domain]
+    INFRA[Infrastructure]
+    DB[(PostgreSQL)]
+    AI[AI Provider: Fake ou OpenAI]
+
+    FE --> API
+    API --> APP
+    APP --> DOMAIN
+    APP --> INFRA
+    INFRA --> DB
+    INFRA --> AI
+```
+
+Mais detalhes estao em [docs/03-architecture.md](docs/03-architecture.md).
+
+## Fluxo principal
 
 ```mermaid
 sequenceDiagram
     actor U as Usuario
     participant FE as Frontend
     participant API as Backend
-    participant AI as AI Service
+    participant AI as IA
     participant DB as PostgreSQL
 
     U->>FE: Cria conta ou faz login
-    U->>FE: Cria projeto e descreve a ideia
-    FE->>API: Envia descricao inicial
-    API->>AI: Solicita perguntas de refinamento
-    AI-->>API: Retorna perguntas
+    U->>FE: Cria projeto
+    U->>FE: Descreve a ideia inicial
+    FE->>API: Envia dados do projeto
+    FE->>API: Solicita geracao de perguntas
+    API->>AI: Gera perguntas de refinamento
+    AI-->>API: Retorna perguntas em JSON
     API-->>FE: Exibe perguntas
     U->>FE: Responde perguntas
     FE->>API: Envia respostas
-    API->>AI: Solicita documento inicial
-    AI-->>API: Retorna documento estruturado
-    API->>DB: Persiste projeto e documento
-    API-->>FE: Exibe documentacao inicial
+    FE->>API: Solicita geracao de documento
+    API->>AI: Gera documento tecnico inicial
+    AI-->>API: Retorna documento em JSON
+    API->>DB: Persiste documento
+    API-->>FE: Exibe documento final
 ```
 
-## Tecnologias previstas
+## Fluxo de geracao de perguntas
 
-- **Backend:** .NET 8, ASP.NET Core Web API
-- **Frontend:** React + TypeScript
-- **Banco de dados:** PostgreSQL
-- **Containerizacao:** Docker e Docker Compose
-- **Testes:** testes unitarios e de integracao
-- **IA:** FakeAiService por padrao e OpenAI opcional
+```mermaid
+flowchart TD
+    A[Projeto em Draft] --> B[Usuario solicita geracao]
+    B --> C[Backend carrega prompt runtime]
+    C --> D[Provider Fake ou OpenAI]
+    D --> E[Retorno em JSON estruturado]
+    E --> F[Validacao da resposta]
+    F --> G[Persistencia das perguntas]
+    G --> H[Status QuestionsGenerated]
+    H --> I[Frontend exibe perguntas]
+```
 
-## Estrategia de testes
+## Fluxo de geracao de documento
 
-- **Testes unitarios:** validam regras de negocio, validacoes, mapeamentos e comportamentos isolados.
-- **Testes de integracao:** validam endpoints, persistencia, fluxos principais e integracao com `FakeAiService`.
-- **Objetivo didatico:** garantir confianca na evolucao do projeto sem depender de servicos externos.
+```mermaid
+flowchart TD
+    A[Perguntas respondidas] --> B[Usuario solicita documento]
+    B --> C[Backend consolida descricao e respostas]
+    C --> D[Backend carrega prompt runtime]
+    D --> E[Provider Fake ou OpenAI]
+    E --> F[Retorno em JSON estruturado]
+    F --> G[Validacao da resposta]
+    G --> H[Persistencia do documento]
+    H --> I[Status DocumentGenerated]
+    I --> J[Frontend exibe documento tecnico]
+```
 
-Mais detalhes estao em [docs/08-testing-strategy.md](docs/08-testing-strategy.md).
+## Tecnologias utilizadas
 
-## Decisoes de arquitetura
+### Backend
 
-As principais decisoes foram registradas como ADRs:
+- .NET 8
+- ASP.NET Core Web API
+- MediatR
+- FluentValidation
+- Entity Framework Core
 
-- arquitetura monolitica modular
-- PostgreSQL como banco relacional
-- saida estruturada da IA
-- prompts com metodo CO-STAR
-- uso do Codex como agente de desenvolvimento assistido
-- Docker Compose para ambiente local
-- testes automatizados
-- FakeAiService para execucao e testes sem dependencias externas
+### Frontend
 
-Veja [docs/adr](docs/adr).
+- React
+- TypeScript
+- Vite
+- React Router
+- TanStack Query
+- React Hook Form
+- Zod
 
-## Como o avaliador executa com Docker Compose
+### IA
 
-O ambiente local foi preparado para ser iniciado com um unico comando. Nesta etapa, `docker compose up --build` deve subir:
+- `FakeAiService`
+- OpenAI opcional
+- prompts runtime em CO-STAR
+
+### Banco
 
 - PostgreSQL
-- API backend
-- frontend React
 
-No Linux ou macOS:
+### Infra
+
+- Docker
+- Docker Compose
+
+### Testes
+
+- xUnit no backend
+- testes unitarios e de integracao no backend
+- Vitest
+- React Testing Library
+- jsdom
+
+### CI
+
+- GitHub Actions
+
+## Como executar com Docker Compose
+
+Exemplo de fluxo local:
 
 ```bash
+git clone <url-do-repositorio>
+cd projectc4
 cp .env.example .env
 docker compose up --build
 ```
@@ -180,83 +303,24 @@ docker compose up --build
 No PowerShell:
 
 ```powershell
+git clone <url-do-repositorio>
+Set-Location projectc4
 Copy-Item .env.example .env
 docker compose up --build
 ```
 
-Ao subir via Docker Compose, a API inicializa automaticamente o schema necessario do banco para o MVP atual.
+URLs esperadas:
 
-## Enderecos esperados
-
-- API: `http://localhost:8080`
 - Frontend: `http://localhost:3000`
+- API: `http://localhost:8080`
 - Swagger: `http://localhost:8080/swagger`
-- Health check: `http://localhost:8080/health`
-- PostgreSQL: `localhost:5432`
+- Health: `http://localhost:8080/health`
 
-## Variaveis de ambiente principais
+## Como executar sem Docker
 
-O arquivo `.env.example` ja traz valores padrao para:
+O caminho recomendado para avaliacao continua sendo Docker Compose, porque ele concentra frontend, API e PostgreSQL com configuracao padrao reprodutivel.
 
-- banco PostgreSQL
-- porta da API
-- porta e base URL do frontend
-- configuracao JWT basica
-- `Ai__Provider=Fake`
-- `Ai__OpenAi__ApiKey`
-- `Ai__OpenAi__Model`
-
-Isso permite subir o ambiente sem depender de chave externa de IA.
-
-## Uso de IA Fake e OpenAI
-
-Para execucao local e testes:
-
-- mantenha `Ai__Provider=Fake`
-- nao e necessario informar chave externa
-
-Para habilitar OpenAI:
-
-```text
-Ai__Provider=OpenAI
-Ai__OpenAi__ApiKey=sua-chave
-Ai__OpenAi__Model=gpt-4.1-mini
-```
-
-Neste modo:
-
-- a Infrastructure usa `HttpClient` direto contra a API da OpenAI
-- os prompts de `prompts/runtime/` sao renderizados com placeholders
-- o provider exige resposta em JSON estruturado
-- a resposta e validada antes de seguir para a aplicacao
-
-## Como encerrar o ambiente
-
-```bash
-docker compose down
-```
-
-Para remover tambem os volumes:
-
-```bash
-docker compose down -v
-```
-
-## Como rodar testes
-
-Os testes atuais do backend podem ser executados localmente com:
-
-```bash
-dotnet test src/backend/SpecPilot.sln
-```
-
-Quando os testes de fluxo do MVP forem ampliados, o `FakeAiService` continuara sendo o comportamento padrao para garantir reprodutibilidade.
-
-## Como rodar o frontend isoladamente
-
-O frontend foi criado em `src/frontend/specpilot-web`.
-
-No PowerShell:
+Para rodar o frontend isoladamente, a documentacao atual ja cobre:
 
 ```powershell
 Set-Location src/frontend/specpilot-web
@@ -264,85 +328,190 @@ npm install
 npm run dev
 ```
 
-Por padrao, a aplicacao espera a API em `http://localhost:8080`.
+Para o backend, o projeto da API fica em `src/backend/src/SpecPilot.Api` e pode ser executado localmente em ambiente .NET 8 quando necessario durante desenvolvimento. Ainda assim, para avaliacao do MVP, a recomendacao principal do repositorio continua sendo usar Docker Compose.
 
-## Como rodar testes do frontend
+## Variaveis de ambiente
 
-No PowerShell:
+As variaveis principais incluem:
+
+- `Ai__Provider=Fake`
+- `Ai__OpenAi__ApiKey`
+- `Ai__OpenAi__Model`
+- configuracoes de JWT
+- configuracoes do PostgreSQL
+- `VITE_API_BASE_URL`
+
+Exemplo de configuracao padrao:
+
+```text
+Ai__Provider=Fake
+Ai__OpenAi__ApiKey=
+Ai__OpenAi__Model=gpt-4.1-mini
+VITE_API_BASE_URL=http://localhost:8080
+```
+
+Pontos importantes:
+
+- OpenAI nao e obrigatoria;
+- `FakeAiService` e o comportamento padrao;
+- segredos nao devem ser versionados;
+- a chave OpenAI nao deve ir para o frontend;
+- o frontend nunca chama OpenAI diretamente.
+
+Para habilitar OpenAI opcionalmente:
+
+```text
+Ai__Provider=OpenAI
+Ai__OpenAi__ApiKey=sua-chave
+Ai__OpenAi__Model=gpt-4.1-mini
+```
+
+## Como rodar os testes
+
+Backend:
+
+```bash
+dotnet test src/backend/SpecPilot.sln
+```
+
+Frontend:
 
 ```powershell
 Set-Location src/frontend/specpilot-web
+npm ci
+npm run build
 npm test
 ```
 
-Os testes usam Vitest + React Testing Library com ambiente `jsdom` e nao dependem de backend real.
+## CI com GitHub Actions
 
-## Integracao continua
+O repositorio possui CI em `.github/workflows/ci.yml`.
 
-O repositorio possui um workflow de GitHub Actions em `.github/workflows/ci.yml` para validar automaticamente backend e frontend em `push` e `pull_request`.
+O que ele valida:
 
-Essa pipeline executa:
+- backend com restore, build e testes;
+- frontend com `npm ci`, `npm run build` e `npm test`.
 
-- backend: restore, build e testes da solution em `src/backend`
-- frontend: `npm ci`, `npm run build` e `npm test` em `src/frontend/specpilot-web`
+O que ele nao faz:
 
-No escopo atual, o CI:
+- nao faz deploy;
+- nao publica imagens Docker;
+- nao usa segredos reais de OpenAI;
+- nao chama OpenAI real;
+- fixa `Ai__Provider=Fake` no backend.
 
-- nao faz deploy
-- nao publica imagens Docker
-- nao usa segredos reais de OpenAI
-- fixa `Ai__Provider=Fake` no job de backend para evitar chamadas reais ao provider externo
-
-Isso reforca qualidade, confiabilidade e rastreabilidade do MVP sem aumentar escopo de infraestrutura.
-
-## Prompts do projeto
-
-O repositorio separa dois tipos de prompts:
-
-- `prompts/runtime/`: prompts que a aplicacao usara em execucao
-- `prompts/codex/`: prompts que documentam como a IA pode apoiar o desenvolvimento do projeto
-
-Os prompts de runtime seguem CO-STAR e os prompts do Codex registram o processo de trabalho por etapa.
-
-## Estrutura deste repositorio
+## Estrutura de pastas
 
 ```text
-.
-|-- README.md
-|-- AGENTS.md
-|-- .gitignore
-|-- .env.example
-|-- docker-compose.yml
-|-- docs/
-|   |-- adr/
-|   `-- ...
-|-- prompts/
-|   |-- codex/
-|   `-- runtime/
-|-- src/
-`-- tests/
+docs/
+docs/adr/
+prompts/runtime/
+prompts/codex/
+src/backend/
+src/frontend/
+tests/backend/
 ```
 
-## Leituras recomendadas dentro do repositorio
+## Decisoes de arquitetura
 
-- [docs/00-project-overview.md](docs/00-project-overview.md)
-- [docs/03-architecture.md](docs/03-architecture.md)
-- [docs/04-ai-usage.md](docs/04-ai-usage.md)
-- [docs/08-testing-strategy.md](docs/08-testing-strategy.md)
-- [docs/12-docker-strategy.md](docs/12-docker-strategy.md)
+Entre as principais decisoes registradas:
 
-## Documentacao complementar
+- backend como monolito em camadas;
+- PostgreSQL como banco relacional;
+- Result Pattern com `ProblemDetails`;
+- Global Exception Handler;
+- `FakeAiService` como provider padrao;
+- `HttpClient` para o provider OpenAI;
+- Docker Compose como setup principal;
+- GitHub Actions para CI;
+- protecao das transicoes de `ProjectStatus`;
+- prompts runtime em CO-STAR;
+- human-in-the-loop no processo de desenvolvimento.
 
-- [docs/development-log.md](docs/development-log.md)
+As ADRs podem ser consultadas em [docs/adr](docs/adr).
+
+## Boas praticas aplicadas
+
+O projeto foi guiado por principios e praticas como:
+
+- SOLID;
+- DRY;
+- KISS;
+- YAGNI;
+- Clean Code;
+- validacao de entrada;
+- testes automatizados;
+- CI;
+- separacao de responsabilidades;
+- documentacao versionada;
+- Conventional Commits;
+- development log;
+- ADRs.
+
+Mais detalhes estao em [docs/13-development-best-practices.md](docs/13-development-best-practices.md).
+
+## Seguranca basica
+
+Entre os cuidados de seguranca presentes no projeto:
+
+- autenticacao com JWT;
+- rotas protegidas;
+- isolamento de projetos por usuario autenticado;
+- senha nao retornada pela API;
+- chave OpenAI fora do frontend;
+- frontend sem chamada direta para OpenAI;
+- respostas de erro sem exposicao de stack trace ao usuario;
+- `ProjectStatus` nao editavel manualmente no fluxo comum.
+
+Mais detalhes estao em [docs/09-security.md](docs/09-security.md).
+
+## Checklist de avaliacao
+
+Para uma validacao objetiva do MVP, consulte:
+
 - [docs/14-evaluation-checklist.md](docs/14-evaluation-checklist.md)
 
-## Convencao de commits
+## Limitacoes conhecidas
 
-Este projeto adota **Conventional Commits** para manter historico claro e consistente.
+Limitacoes reais desta etapa:
 
-Exemplos:
+- sem RAG;
+- sem upload de arquivos;
+- sem exportacao PDF;
+- sem chat livre;
+- sem multiplos agentes;
+- sem deploy cloud;
+- sem colaboracao multiusuario;
+- sem versionamento complexo de documentos;
+- OpenAI opcional, com `FakeAiService` como padrao.
 
-- `docs: add initial project documentation`
-- `docs: review initial documentation`
-- `chore: add backend solution structure`
-- `chore: add docker compose setup`
+## Proximos passos
+
+Possiveis evolucoes futuras:
+
+- RAG;
+- upload de documentos;
+- exportacao PDF;
+- versionamento de documentos;
+- multiplos agentes especializados;
+- Playwright E2E;
+- deploy;
+- observabilidade avancada.
+
+## Leituras complementares
+
+- [docs/00-project-overview.md](docs/00-project-overview.md)
+- [docs/01-problem-statement.md](docs/01-problem-statement.md)
+- [docs/03-architecture.md](docs/03-architecture.md)
+- [docs/04-ai-usage.md](docs/04-ai-usage.md)
+- [docs/05-prompts.md](docs/05-prompts.md)
+- [docs/08-testing-strategy.md](docs/08-testing-strategy.md)
+- [docs/10-setup-guide.md](docs/10-setup-guide.md)
+- [docs/11-codex-development-process.md](docs/11-codex-development-process.md)
+- [docs/12-docker-strategy.md](docs/12-docker-strategy.md)
+- [docs/14-evaluation-checklist.md](docs/14-evaluation-checklist.md)
+- [docs/development-log.md](docs/development-log.md)
+
+## Conclusao
+
+O SpecPilot AI demonstra uma aplicacao pratica de IA Generativa com controle, rastreabilidade e foco academico. O projeto mostra como usar IA dentro do produto de forma estruturada e como usar IA durante o desenvolvimento sem abrir mao de revisao humana, testes, Docker, CI, documentacao e disciplina de engenharia. O resultado final nao e apenas um MVP funcional, mas tambem um processo de desenvolvimento assistido por IA que permanece auditavel, reproduzivel e conscientemente limitado em escopo.
