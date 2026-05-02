@@ -44,4 +44,4 @@ docker compose up --build
 
 ## Observacao importante
 
-O frontend desta etapa ja cobre autenticacao e gerenciamento basico de projetos (listagem, criacao, detalhe, edicao e exclusao). Os fluxos de perguntas e documento ainda serao conectados nas proximas entregas.
+O frontend desta etapa ja cobre autenticacao, gerenciamento de projetos e fluxo principal de IA do MVP (gerar perguntas, responder perguntas, gerar documento e visualizar documento).

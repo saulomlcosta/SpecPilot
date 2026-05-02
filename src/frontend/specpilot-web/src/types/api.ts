@@ -61,20 +61,45 @@ export interface RefinementQuestionResponse {
   answer: string | null;
 }
 
+export type FunctionalRequirement = string;
+export type NonFunctionalRequirement = string;
+export type UseCase = string;
+export type Risk = string;
+
+export interface GenerateQuestionsResponse {
+  projectId: string;
+  status: ProjectStatus;
+  questions: string[];
+}
+
 export interface ProjectQuestionsResponse {
   projectId: string;
   status: ProjectStatus;
   questions: RefinementQuestionResponse[];
 }
 
+export interface AnswerQuestionItem {
+  questionId: string;
+  answer: string;
+}
+
+export interface AnswerQuestionsRequest {
+  answers: AnswerQuestionItem[];
+}
+
+export interface AnswerQuestionsResponse {
+  projectId: string;
+  status: ProjectStatus;
+}
+
 export interface ProjectDocumentResponse {
   projectId: string;
   status: ProjectStatus;
   overview: string;
-  functionalRequirements: string[];
-  nonFunctionalRequirements: string[];
-  useCases: string[];
-  risks: string[];
+  functionalRequirements: FunctionalRequirement[];
+  nonFunctionalRequirements: NonFunctionalRequirement[];
+  useCases: UseCase[];
+  risks: Risk[];
 }
 
 export interface ApiHealthResponse {

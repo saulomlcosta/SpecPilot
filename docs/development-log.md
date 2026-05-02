@@ -138,3 +138,10 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - adicionada camada de servicos para `GET/POST/PUT/DELETE /api/projects` com tratamento de `ProblemDetails`
 - mantida a regra de negocio do backend: `status` exibido, mas nunca enviado em create/update
 - ajustadas as telas para estados de loading, erro amigavel, vazio e redirecionamentos apos mutacoes
+
+## 2026-05-02 - Prompt 16 concluido
+
+- implementado fluxo de IA no frontend com geracao de perguntas, resposta com `questionId` real e geracao de documento
+- conectada a pagina de documento ao endpoint `GET /api/projects/{id}/document` com secoes estruturadas
+- adicionados servicos e tipos para endpoints de refinamento e documento com tratamento amigavel de `ProblemDetails`
+- mantida a orientacao de status do backend para habilitar apenas acoes compativeis em cada etapa
