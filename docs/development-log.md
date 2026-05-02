@@ -131,3 +131,10 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - adicionado gerenciamento de sessao com JWT em storage centralizado e `GET /api/auth/me`
 - aplicadas rotas protegidas para as paginas internas e redirecionamentos de autenticacao
 - implementado logout no layout autenticado com exibicao do usuario atual
+
+## 2026-05-02 - Prompt 15 concluido
+
+- implementado fluxo de projetos no frontend com listagem, criacao, detalhe, edicao e exclusao
+- adicionada camada de servicos para `GET/POST/PUT/DELETE /api/projects` com tratamento de `ProblemDetails`
+- mantida a regra de negocio do backend: `status` exibido, mas nunca enviado em create/update
+- ajustadas as telas para estados de loading, erro amigavel, vazio e redirecionamentos apos mutacoes

@@ -27,13 +27,29 @@ export interface LoginRequest {
   password: string;
 }
 
+export type ProjectStatus = 'Draft' | 'QuestionsGenerated' | 'QuestionsAnswered' | 'DocumentGenerated';
+
+export interface CreateProjectRequest {
+  name: string;
+  initialDescription: string;
+  goal: string;
+  targetAudience: string;
+}
+
+export interface UpdateProjectRequest {
+  name: string;
+  initialDescription: string;
+  goal: string;
+  targetAudience: string;
+}
+
 export interface ProjectResponse {
   id: string;
   name: string;
   initialDescription: string;
   goal: string;
   targetAudience: string;
-  status: 'Draft' | 'QuestionsGenerated' | 'QuestionsAnswered' | 'DocumentGenerated';
+  status: ProjectStatus;
   createdAt: string;
   updatedAt: string | null;
 }
@@ -47,13 +63,13 @@ export interface RefinementQuestionResponse {
 
 export interface ProjectQuestionsResponse {
   projectId: string;
-  status: ProjectResponse['status'];
+  status: ProjectStatus;
   questions: RefinementQuestionResponse[];
 }
 
 export interface ProjectDocumentResponse {
   projectId: string;
-  status: ProjectResponse['status'];
+  status: ProjectStatus;
   overview: string;
   functionalRequirements: string[];
   nonFunctionalRequirements: string[];

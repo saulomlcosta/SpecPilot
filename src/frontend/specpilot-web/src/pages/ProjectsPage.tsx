@@ -1,54 +1,87 @@
+import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { EmptyState } from '../components/EmptyState';
+import { FormError } from '../components/FormError';
 import { LoadingState } from '../components/LoadingState';
-import { useApiHealth } from '../hooks/useApiHealth';
+import { listProjects } from '../services/projects';
+import type { ProjectStatus } from '../types/api';
+import { getErrorMessage } from '../utils/errorMessage';
+
+const statusLabels: Record<ProjectStatus, string> = {
+  Draft: 'Rascunho',
+  QuestionsGenerated: 'Perguntas geradas',
+  QuestionsAnswered: 'Perguntas respondidas',
+  DocumentGenerated: 'Documento gerado'
+};
 
 export function ProjectsPage() {
-  const healthQuery = useApiHealth();
+  const projectsQuery = useQuery({
+    queryKey: ['projects'],
+    queryFn: listProjects
+  });
 
   return (
     <>
       <Card
         title="Area de projetos"
-        description="Nesta etapa, a pagina organiza a navegacao do MVP e confirma a conectividade basica com o backend."
+        description="Lista de projetos do usuario autenticado."
       >
-        {healthQuery.isLoading && <LoadingState description="Verificando se a API do SpecPilot AI esta acessivel." />}
+        <div className="mb-5 flex justify-end">
+          <Link to="/projects/new">
+            <Button>Criar projeto</Button>
+          </Link>
+        </div>
 
-        {healthQuery.isSuccess && (
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-3xl bg-brand-50 p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand-700">API pronta</p>
-              <p className="mt-3 text-sm leading-6 text-brand-900">
-                Conexao basica validada com `{healthQuery.data.apiBaseUrl}` em {new Date(healthQuery.data.checkedAt).toLocaleTimeString('pt-BR')}.
-              </p>
-            </div>
-            <div className="rounded-3xl bg-stone-100 p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">Proximos fluxos</p>
-              <p className="mt-3 text-sm leading-6 text-slate-700">
-                Listagem de projetos, criacao, consulta do documento e passos de refinamento serao conectados nas proximas entregas.
-              </p>
-            </div>
-          </div>
-        )}
+        {projectsQuery.isLoading && <LoadingState description="Carregando projetos..." />}
 
-        {healthQuery.isError && (
-          <EmptyState
-            title="API indisponivel"
-            description="O frontend foi iniciado, mas a verificacao do backend falhou. Confirme se o Docker Compose subiu a API em http://localhost:8080."
+        {projectsQuery.isError && (
+          <FormError
+            message={getErrorMessage(
+              projectsQuery.error,
+              'Nao foi possivel carregar os projetos. Tente novamente.'
+            )}
           />
         )}
-      </Card>
 
-      <EmptyState
-        title="Nenhum projeto conectado ainda"
-        description="A estrutura da pagina ja existe, mas a listagem real via GET /api/projects sera implementada em uma etapa funcional futura."
-      >
-        <Link to="/projects/new">
-          <Button variant="primary">Criar primeiro projeto</Button>
-        </Link>
-      </EmptyState>
+        {projectsQuery.isSuccess && projectsQuery.data.length === 0 && (
+          <EmptyState
+            title="Nenhum projeto cadastrado"
+            description="Crie seu primeiro projeto para iniciar o fluxo do MVP."
+          >
+            <Link to="/projects/new">
+              <Button variant="primary">Criar primeiro projeto</Button>
+            </Link>
+          </EmptyState>
+        )}
+
+        {projectsQuery.isSuccess && projectsQuery.data.length > 0 && (
+          <div className="space-y-4">
+            {projectsQuery.data.map((project) => (
+              <article key={project.id} className="rounded-3xl border border-slate-200 bg-white p-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h3 className="text-lg font-semibold text-slate-900">{project.name}</h3>
+                  <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+                    {statusLabels[project.status]}
+                  </span>
+                </div>
+                <p className="mt-3 text-sm text-slate-700">
+                  <span className="font-semibold">Objetivo:</span> {project.goal}
+                </p>
+                <p className="mt-2 text-sm text-slate-700">
+                  <span className="font-semibold">Publico-alvo:</span> {project.targetAudience}
+                </p>
+                <div className="mt-4">
+                  <Link to={`/projects/${project.id}`}>
+                    <Button variant="ghost">Ver detalhes</Button>
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </Card>
     </>
   );
 }

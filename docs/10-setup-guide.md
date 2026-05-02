@@ -44,4 +44,4 @@ docker compose up --build
 
 ## Observacao importante
 
-O frontend desta etapa ja cobre autenticacao (cadastro, login, sessao e logout), mas os fluxos completos de projetos, perguntas e documento ainda serao conectados nas proximas entregas.
+O frontend desta etapa ja cobre autenticacao e gerenciamento basico de projetos (listagem, criacao, detalhe, edicao e exclusao). Os fluxos de perguntas e documento ainda serao conectados nas proximas entregas.
