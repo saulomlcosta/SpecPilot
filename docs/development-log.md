@@ -251,3 +251,10 @@ Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de
 - causa raiz identificada: ausencia de configuracao explicita de CORS no backend ASP.NET Core para as origens locais do frontend
 - correcao aplicada com a policy `SpecPilotFrontend`, configurada por `Cors__AllowedOrigins`, permitindo apenas `http://localhost:3000` e `http://127.0.0.1:3000`, com metodos do MVP e header `Authorization`
 - validados o ciclo vermelho e verde com teste de integracao de preflight CORS, `dotnet test src/backend/SpecPilot.sln`, `npm ci`, `npm run build`, `npm test`, `docker compose config`, `docker compose up --build -d`, `OPTIONS /api/auth/login`, `POST /api/auth/register` e `POST /api/auth/login` com header `Origin`
+
+## 2026-05-02 - Patch release v1.0.1
+
+- criada a tag `v1.0.1` apos a correcao de CORS entre navegador, frontend e backend
+- a tag `v1.0.0` continua apontando para o estado anterior da primeira release do MVP
+- a versao `v1.0.1` passa a ser a versao recomendada para avaliacao
+- nao houve nova funcionalidade; esta etapa registra apenas a correcao de integracao browser/frontend/backend

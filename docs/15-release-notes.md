@@ -1,5 +1,29 @@
 # Release Notes — SpecPilot AI MVP
 
+## MVP 1.0.1
+
+### Tipo
+
+Patch release
+
+### Resumo
+
+Correcao da configuracao de CORS para permitir chamadas do frontend local em `http://localhost:3000` para a API em `http://localhost:8080`.
+
+### Correcoes
+
+- configuracao de CORS no backend ASP.NET Core;
+- permissao explicita para as origens locais do frontend;
+- suporte ao header `Authorization` nas chamadas do frontend;
+- validacao do fluxo de login e cadastro pelo navegador.
+
+### Impacto
+
+- a versao `v1.0.1` e a versao recomendada para avaliacao;
+- a `v1.0.0` permanece no historico como a primeira release do MVP;
+- nenhuma funcionalidade nova foi adicionada;
+- o escopo do MVP nao foi alterado.
+
 ## Versao
 
 - MVP 1.0

@@ -467,6 +467,8 @@ Mais detalhes estao em [docs/09-security.md](docs/09-security.md).
 
 ## Checklist de avaliacao
 
+Para avaliacao academica, a versao recomendada do MVP e a `v1.0.1`, que preserva o escopo da `v1.0.0` e registra a correcao de CORS entre frontend e backend no navegador.
+
 Para uma validacao objetiva do MVP, consulte:
 
 - [docs/14-evaluation-checklist.md](docs/14-evaluation-checklist.md)
