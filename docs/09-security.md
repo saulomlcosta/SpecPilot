@@ -18,3 +18,9 @@ Como backend e frontend ainda nao foram implementados, este documento registra a
 - validar formato de saida
 - tratar respostas de IA como dado externo
 
+## Cuidados com erros e logs
+
+- respostas HTTP de erro nao devem expor stack trace
+- mensagens publicas devem permanecer seguras e genericas para falhas inesperadas
+- logs devem evitar senha, token JWT, API key e outros segredos
+- quando possivel, diagnostico deve usar IDs tecnicos em vez de dados sensiveis

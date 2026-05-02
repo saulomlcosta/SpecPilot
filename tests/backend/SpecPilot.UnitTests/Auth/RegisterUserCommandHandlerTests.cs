@@ -16,7 +16,8 @@ public class RegisterUserCommandHandlerTests
         var handler = new RegisterUserCommandHandler(
             context,
             new TestPasswordHasher(),
-            new TestJwtTokenGenerator());
+            new TestJwtTokenGenerator(),
+            TestLogger<RegisterUserCommandHandler>.Instance);
 
         var command = new RegisterUserCommand
         {
@@ -49,7 +50,8 @@ public class RegisterUserCommandHandlerTests
         var handler = new RegisterUserCommandHandler(
             context,
             new TestPasswordHasher(),
-            new TestJwtTokenGenerator());
+            new TestJwtTokenGenerator(),
+            TestLogger<RegisterUserCommandHandler>.Instance);
 
         var command = new RegisterUserCommand
         {

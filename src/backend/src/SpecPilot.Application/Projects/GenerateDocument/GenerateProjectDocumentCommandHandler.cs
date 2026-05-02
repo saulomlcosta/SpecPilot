@@ -1,6 +1,7 @@
 using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SpecPilot.Application.Abstractions.Ai;
 using SpecPilot.Application.Abstractions.Auth;
 using SpecPilot.Application.Abstractions.Persistence;
@@ -19,15 +20,18 @@ public class GenerateProjectDocumentCommandHandler
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserAccessor _currentUserAccessor;
     private readonly IAiService _aiService;
+    private readonly ILogger<GenerateProjectDocumentCommandHandler> _logger;
 
     public GenerateProjectDocumentCommandHandler(
         IApplicationDbContext context,
         ICurrentUserAccessor currentUserAccessor,
-        IAiService aiService)
+        IAiService aiService,
+        ILogger<GenerateProjectDocumentCommandHandler> logger)
     {
         _context = context;
         _currentUserAccessor = currentUserAccessor;
         _aiService = aiService;
+        _logger = logger;
     }
 
     public async Task<Result<ProjectDocumentResponse>> Handle(
@@ -50,6 +54,7 @@ public class GenerateProjectDocumentCommandHandler
 
         if (project is null)
         {
+            _logger.LogWarning("Projeto nao encontrado para geracao de documento. ProjectId={ProjectId} UserId={UserId}", request.ProjectId, _currentUserAccessor.UserId);
             return Result.Failure<ProjectDocumentResponse>(Error.NotFound(
                 "projects.not_found",
                 "Projeto nao encontrado."));
@@ -57,6 +62,7 @@ public class GenerateProjectDocumentCommandHandler
 
         if (project.Status != ProjectStatus.QuestionsAnswered)
         {
+            _logger.LogWarning("Status invalido para geracao de documento. ProjectId={ProjectId} Status={Status}", project.Id, project.Status);
             return Result.Failure<ProjectDocumentResponse>(Error.Conflict(
                 "projects.invalid_status_for_document_generation",
                 "Somente projetos com status QuestionsAnswered podem gerar documento."));
@@ -86,6 +92,7 @@ public class GenerateProjectDocumentCommandHandler
         };
 
         var aiResponse = await _aiService.GenerateProjectDocumentAsync(aiRequest, cancellationToken);
+        _logger.LogInformation("Documento gerado com sucesso. ProjectId={ProjectId} UserId={UserId} Provider={Provider} Model={Model}", project.Id, project.UserId, aiResponse.Metadata?.Provider ?? _aiService.GetType().Name, aiResponse.Metadata?.Model ?? string.Empty);
 
         var document = new ProjectDocument
         {

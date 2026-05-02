@@ -7,6 +7,7 @@ using SpecPilot.Domain.Entities;
 using SpecPilot.Domain.Enums;
 using SpecPilot.Infrastructure.Persistence;
 using SpecPilot.IntegrationTests.Auth;
+using SpecPilot.IntegrationTests.Infrastructure;
 
 namespace SpecPilot.IntegrationTests.Projects;
 
@@ -66,6 +67,9 @@ public class AnswerRefinementQuestionsEndpointTests : IClassFixture<SpecPilotApi
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Detail.Should().Be("Token ausente ou invalido.");
     }
 
     [Fact]
@@ -86,6 +90,9 @@ public class AnswerRefinementQuestionsEndpointTests : IClassFixture<SpecPilotApi
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Extensions["code"].GetString().Should().Be("projects.not_found");
     }
 
     [Fact]
@@ -107,6 +114,9 @@ public class AnswerRefinementQuestionsEndpointTests : IClassFixture<SpecPilotApi
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Extensions["code"].GetString().Should().Be("projects.invalid_status_for_question_answering");
     }
 
     [Fact]
@@ -129,6 +139,9 @@ public class AnswerRefinementQuestionsEndpointTests : IClassFixture<SpecPilotApi
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Extensions["code"].GetString().Should().Be("projects.incomplete_answers");
     }
 
     private async Task<HttpClient> CreateAuthenticatedClientAsync()

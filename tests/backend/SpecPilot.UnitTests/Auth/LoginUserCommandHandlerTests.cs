@@ -24,7 +24,8 @@ public class LoginUserCommandHandlerTests
         var handler = new LoginUserCommandHandler(
             context,
             new TestPasswordHasher(),
-            new TestJwtTokenGenerator());
+            new TestJwtTokenGenerator(),
+            TestLogger<LoginUserCommandHandler>.Instance);
 
         var response = await handler.Handle(new LoginUserCommand
         {
@@ -44,7 +45,8 @@ public class LoginUserCommandHandlerTests
         var handler = new LoginUserCommandHandler(
             context,
             new TestPasswordHasher(),
-            new TestJwtTokenGenerator());
+            new TestJwtTokenGenerator(),
+            TestLogger<LoginUserCommandHandler>.Instance);
 
         var response = await handler.Handle(new LoginUserCommand
         {

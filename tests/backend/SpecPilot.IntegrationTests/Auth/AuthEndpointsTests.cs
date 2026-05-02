@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using FluentAssertions;
+using SpecPilot.IntegrationTests.Infrastructure;
 
 namespace SpecPilot.IntegrationTests.Auth;
 
@@ -58,6 +59,7 @@ public class AuthEndpointsTests : IClassFixture<SpecPilotApiFactory>
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
         problem.Should().NotBeNull();
         problem!.Status.Should().Be(409);
+        problem.Extensions["code"].GetString().Should().Be("auth.email_already_registered");
     }
 
     [Fact]
@@ -100,6 +102,7 @@ public class AuthEndpointsTests : IClassFixture<SpecPilotApiFactory>
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
         problem.Should().NotBeNull();
         problem!.Status.Should().Be(401);
+        problem.Extensions["code"].GetString().Should().Be("auth.invalid_credentials");
     }
 
     [Fact]
@@ -113,6 +116,7 @@ public class AuthEndpointsTests : IClassFixture<SpecPilotApiFactory>
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
         problem.Should().NotBeNull();
         problem!.Status.Should().Be(401);
+        problem.Detail.Should().Be("Token ausente ou invalido.");
     }
 
     [Fact]
@@ -150,12 +154,5 @@ public class AuthEndpointsTests : IClassFixture<SpecPilotApiFactory>
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-    }
-
-    private sealed class ProblemDetailsContract
-    {
-        public string Title { get; set; } = string.Empty;
-        public string Detail { get; set; } = string.Empty;
-        public int? Status { get; set; }
     }
 }

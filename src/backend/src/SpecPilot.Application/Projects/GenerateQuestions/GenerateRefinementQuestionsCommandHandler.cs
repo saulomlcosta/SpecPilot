@@ -1,6 +1,7 @@
 using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SpecPilot.Application.Abstractions.Ai;
 using SpecPilot.Application.Abstractions.Auth;
 using SpecPilot.Application.Abstractions.Persistence;
@@ -19,15 +20,18 @@ public class GenerateRefinementQuestionsCommandHandler
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserAccessor _currentUserAccessor;
     private readonly IAiService _aiService;
+    private readonly ILogger<GenerateRefinementQuestionsCommandHandler> _logger;
 
     public GenerateRefinementQuestionsCommandHandler(
         IApplicationDbContext context,
         ICurrentUserAccessor currentUserAccessor,
-        IAiService aiService)
+        IAiService aiService,
+        ILogger<GenerateRefinementQuestionsCommandHandler> logger)
     {
         _context = context;
         _currentUserAccessor = currentUserAccessor;
         _aiService = aiService;
+        _logger = logger;
     }
 
     public async Task<Result<GenerateRefinementQuestionsResult>> Handle(
@@ -49,6 +53,7 @@ public class GenerateRefinementQuestionsCommandHandler
 
         if (project is null)
         {
+            _logger.LogWarning("Projeto nao encontrado para geracao de perguntas. ProjectId={ProjectId} UserId={UserId}", request.ProjectId, _currentUserAccessor.UserId);
             return Result.Failure<GenerateRefinementQuestionsResult>(Error.NotFound(
                 "projects.not_found",
                 "Projeto nao encontrado."));
@@ -56,6 +61,7 @@ public class GenerateRefinementQuestionsCommandHandler
 
         if (project.Status != ProjectStatus.Draft)
         {
+            _logger.LogWarning("Status invalido para geracao de perguntas. ProjectId={ProjectId} Status={Status}", project.Id, project.Status);
             return Result.Failure<GenerateRefinementQuestionsResult>(Error.Conflict(
                 "projects.invalid_status_for_question_generation",
                 "Somente projetos com status Draft podem gerar perguntas de refinamento."));
@@ -70,6 +76,7 @@ public class GenerateRefinementQuestionsCommandHandler
         };
 
         var aiResponse = await _aiService.GenerateRefinementQuestionsAsync(aiRequest, cancellationToken);
+        _logger.LogInformation("Perguntas de refinamento geradas. ProjectId={ProjectId} UserId={UserId} Provider={Provider} Model={Model}", project.Id, project.UserId, aiResponse.Metadata?.Provider ?? _aiService.GetType().Name, aiResponse.Metadata?.Model ?? string.Empty);
 
         var questions = aiResponse.Questions
             .Select((question, index) => new RefinementQuestion

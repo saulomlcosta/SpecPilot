@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using SpecPilot.Application.Ai.Models;
 using SpecPilot.Infrastructure.Ai;
@@ -163,7 +164,8 @@ public class OpenAiServiceTests
             new OpenAiPromptRenderer(Options.Create(new AiOptions
             {
                 PromptsRoot = promptsRoot
-            })));
+            })),
+            NullLogger<OpenAiService>.Instance);
     }
 
     private static string CreatePromptsRoot()

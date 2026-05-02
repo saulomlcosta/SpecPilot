@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SpecPilot.Application.Abstractions.Auth;
 using SpecPilot.Application.Abstractions.Persistence;
 using SpecPilot.Application.Auth.Common;
@@ -13,15 +14,18 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<
     private readonly IApplicationDbContext _context;
     private readonly IPasswordHasherService _passwordHasherService;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ILogger<LoginUserCommandHandler> _logger;
 
     public LoginUserCommandHandler(
         IApplicationDbContext context,
         IPasswordHasherService passwordHasherService,
-        IJwtTokenGenerator jwtTokenGenerator)
+        IJwtTokenGenerator jwtTokenGenerator,
+        ILogger<LoginUserCommandHandler> logger)
     {
         _context = context;
         _passwordHasherService = passwordHasherService;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _logger = logger;
     }
 
     public async Task<Result<AuthResponse>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
@@ -33,6 +37,7 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<
 
         if (user is null)
         {
+            _logger.LogWarning("Tentativa de login com credenciais invalidas.");
             return Result.Failure<AuthResponse>(Error.Unauthorized(
                 "auth.invalid_credentials",
                 "Email ou senha invalidos."));
@@ -42,10 +47,13 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<
 
         if (passwordResult == PasswordVerificationResult.Failed)
         {
+            _logger.LogWarning("Tentativa de login com credenciais invalidas. UserId={UserId}", user.Id);
             return Result.Failure<AuthResponse>(Error.Unauthorized(
                 "auth.invalid_credentials",
                 "Email ou senha invalidos."));
         }
+
+        _logger.LogInformation("Login realizado com sucesso. UserId={UserId}", user.Id);
 
         return Result.Success(new AuthResponse
         {

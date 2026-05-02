@@ -24,6 +24,8 @@ Devem cobrir:
 - fluxo de criacao de projeto
 - fluxo de geracao de perguntas
 - fluxo de geracao de documento
+- respostas `ProblemDetails` para erros esperados
+- tratamento global de excecoes inesperadas
 
 ## Diretrizes
 
@@ -31,6 +33,7 @@ Devem cobrir:
 - testes nao devem depender de internet
 - `FakeAiService` deve ser o padrao para testes
 - cenarios felizes e invalidos devem ser cobertos
+- cenarios de erro HTTP devem validar status e formato padronizado da resposta
 
 ## Aplicacao ao servico de IA
 

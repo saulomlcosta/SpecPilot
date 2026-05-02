@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SpecPilot.Application.Abstractions.Auth;
 using SpecPilot.Application.Abstractions.Persistence;
 using SpecPilot.Application.Projects.AnswerQuestions.Models;
@@ -13,13 +14,16 @@ public class AnswerRefinementQuestionsCommandHandler
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly ILogger<AnswerRefinementQuestionsCommandHandler> _logger;
 
     public AnswerRefinementQuestionsCommandHandler(
         IApplicationDbContext context,
-        ICurrentUserAccessor currentUserAccessor)
+        ICurrentUserAccessor currentUserAccessor,
+        ILogger<AnswerRefinementQuestionsCommandHandler> logger)
     {
         _context = context;
         _currentUserAccessor = currentUserAccessor;
+        _logger = logger;
     }
 
     public async Task<Result<AnswerRefinementQuestionsResult>> Handle(
@@ -41,6 +45,7 @@ public class AnswerRefinementQuestionsCommandHandler
 
         if (project is null)
         {
+            _logger.LogWarning("Projeto nao encontrado para resposta de refinamento. ProjectId={ProjectId} UserId={UserId}", request.ProjectId, _currentUserAccessor.UserId);
             return Result.Failure<AnswerRefinementQuestionsResult>(Error.NotFound(
                 "projects.not_found",
                 "Projeto nao encontrado."));
@@ -48,6 +53,7 @@ public class AnswerRefinementQuestionsCommandHandler
 
         if (project.Status != ProjectStatus.QuestionsGenerated)
         {
+            _logger.LogWarning("Status invalido para resposta de refinamento. ProjectId={ProjectId} Status={Status}", project.Id, project.Status);
             return Result.Failure<AnswerRefinementQuestionsResult>(Error.Conflict(
                 "projects.invalid_status_for_question_answering",
                 "Somente projetos com status QuestionsGenerated podem receber respostas de refinamento."));
@@ -91,6 +97,7 @@ public class AnswerRefinementQuestionsCommandHandler
         project.UpdatedAtUtc = answeredAtUtc;
 
         await _context.SaveChangesAsync(cancellationToken);
+        _logger.LogInformation("Perguntas respondidas com sucesso. ProjectId={ProjectId} UserId={UserId}", project.Id, project.UserId);
 
         return Result.Success(new AnswerRefinementQuestionsResult
         {

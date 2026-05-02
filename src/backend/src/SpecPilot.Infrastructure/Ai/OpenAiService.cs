@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SpecPilot.Application.Abstractions.Ai;
 using SpecPilot.Application.Ai.Models;
@@ -19,15 +20,18 @@ public class OpenAiService : IAiService
     private readonly HttpClient _httpClient;
     private readonly AiOptions _options;
     private readonly OpenAiPromptRenderer _promptRenderer;
+    private readonly ILogger<OpenAiService> _logger;
 
     public OpenAiService(
         HttpClient httpClient,
         IOptions<AiOptions> options,
-        OpenAiPromptRenderer promptRenderer)
+        OpenAiPromptRenderer promptRenderer,
+        ILogger<OpenAiService> logger)
     {
         _httpClient = httpClient;
         _options = options.Value;
         _promptRenderer = promptRenderer;
+        _logger = logger;
     }
 
     public async Task<GenerateRefinementQuestionsResponse> GenerateRefinementQuestionsAsync(
@@ -118,6 +122,7 @@ public class OpenAiService : IAiService
     {
         if (string.IsNullOrWhiteSpace(_options.OpenAi.ApiKey))
         {
+            _logger.LogError("Provider OpenAI configurado sem API key.");
             throw new AiProviderException("A configuracao da OpenAI exige uma API key valida.");
         }
 
@@ -149,6 +154,7 @@ public class OpenAiService : IAiService
         };
 
         message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.OpenAi.ApiKey);
+        _logger.LogInformation("Enviando requisicao para OpenAI. Model={Model}", _options.OpenAi.Model);
 
         HttpResponseMessage responseMessage;
         try
@@ -157,10 +163,12 @@ public class OpenAiService : IAiService
         }
         catch (TaskCanceledException exception)
         {
+            _logger.LogError(exception, "Timeout ao chamar OpenAI. Model={Model}", _options.OpenAi.Model);
             throw new AiProviderException("A chamada para a OpenAI excedeu o tempo limite configurado.", exception);
         }
         catch (HttpRequestException exception)
         {
+            _logger.LogError(exception, "Falha de rede ao chamar OpenAI. Model={Model}", _options.OpenAi.Model);
             throw new AiProviderException("Falha de rede ao chamar a OpenAI.", exception);
         }
 
@@ -168,6 +176,7 @@ public class OpenAiService : IAiService
 
         if (responseMessage.StatusCode < HttpStatusCode.OK || responseMessage.StatusCode >= HttpStatusCode.MultipleChoices)
         {
+            _logger.LogError("OpenAI retornou HTTP invalido. StatusCode={StatusCode} Model={Model}", (int)responseMessage.StatusCode, _options.OpenAi.Model);
             throw new AiProviderException($"A OpenAI retornou HTTP {(int)responseMessage.StatusCode}. Resposta: {rawResponse}");
         }
 
@@ -178,11 +187,13 @@ public class OpenAiService : IAiService
         }
         catch (JsonException exception)
         {
+            _logger.LogError(exception, "Falha ao desserializar resposta HTTP da OpenAI. Model={Model}", _options.OpenAi.Model);
             throw new AiProviderException("A resposta HTTP da OpenAI nao pode ser desserializada.", exception);
         }
 
         if (response is null)
         {
+            _logger.LogError("OpenAI retornou resposta vazia. Model={Model}", _options.OpenAi.Model);
             throw new AiProviderException("A OpenAI retornou uma resposta vazia.");
         }
 

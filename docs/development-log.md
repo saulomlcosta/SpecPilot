@@ -82,3 +82,10 @@ Estamos prontos para continuar com o Prompt 08, desde que o Prompt 07a esteja ap
 Nao implemente nada fora do MVP.
 Use os arquivos do repositorio como fonte da verdade.
 Se houver conflito entre documentacao, codigo e prompts, pare e informe antes de alterar.
+
+## 2026-05-01 - Prompt 11 concluido
+
+- consolidado o uso de `ProblemDetails` para falhas esperadas e inesperadas
+- migrado o tratamento global de excecoes para `IExceptionHandler`
+- adicionados logs estruturados em fluxos principais e no provider OpenAI
+- ampliados testes de integracao para validar respostas padronizadas de erro

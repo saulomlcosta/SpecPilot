@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SpecPilot.Api.Middleware;
+using SpecPilot.Api.Exceptions;
+using SpecPilot.Api.Extensions;
 using SpecPilot.Application;
 using SpecPilot.Infrastructure;
 using SpecPilot.Infrastructure.Authentication;
@@ -11,6 +13,8 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -75,28 +79,23 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 context.Response.ContentType = "application/problem+json";
 
-                var problem = new ProblemDetails
-                {
-                    Title = "Nao autorizado.",
-                    Detail = "Token ausente ou invalido.",
-                    Status = StatusCodes.Status401Unauthorized
-                };
+                var problem = context.HttpContext.CreateProblemDetails(
+                    StatusCodes.Status401Unauthorized,
+                    "Nao autorizado.",
+                    "Token ausente ou invalido.",
+                    "auth.unauthorized");
 
-                await context.Response.WriteAsJsonAsync(problem);
+                await ProblemDetailsWriter.WriteAsync(context.HttpContext, problem);
             },
             OnForbidden = async context =>
             {
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                context.Response.ContentType = "application/problem+json";
+                var problem = context.HttpContext.CreateProblemDetails(
+                    StatusCodes.Status403Forbidden,
+                    "Acesso negado.",
+                    "O usuario autenticado nao possui permissao para acessar este recurso.",
+                    "auth.forbidden");
 
-                var problem = new ProblemDetails
-                {
-                    Title = "Acesso negado.",
-                    Detail = "O usuario autenticado nao possui permissao para acessar este recurso.",
-                    Status = StatusCodes.Status403Forbidden
-                };
-
-                await context.Response.WriteAsJsonAsync(problem);
+                await ProblemDetailsWriter.WriteAsync(context.HttpContext, problem);
             }
         };
     });
@@ -111,7 +110,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseExceptionHandler();
 
 if (app.Configuration.GetValue("UseHttpsRedirection", true))
 {

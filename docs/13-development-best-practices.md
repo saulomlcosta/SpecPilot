@@ -75,6 +75,13 @@ Exemplos:
 - erro nao tratado
 - falha inesperada de infraestrutura
 
+## Consolidacao na API
+
+- controllers devem apenas orquestrar request, mediator e resposta HTTP
+- mapeamento de `Result` para HTTP deve ficar centralizado na camada Api
+- excecoes inesperadas devem ser tratadas por handler global, sem substituir o Result Pattern
+- logs estruturados devem privilegiar IDs e contexto tecnico seguro
+
 ## Diretriz academica
 
 Toda implementacao futura deve conseguir responder:

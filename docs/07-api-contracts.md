@@ -303,6 +303,17 @@ Request:
 }
 ```
 
+Exemplo de falha interna inesperada:
+
+```json
+{
+  "title": "Falha interna.",
+  "detail": "Ocorreu uma falha inesperada durante o processamento da requisicao.",
+  "status": 500,
+  "code": "common.internal_error"
+}
+```
+
 Response `200 OK`:
 
 ```json

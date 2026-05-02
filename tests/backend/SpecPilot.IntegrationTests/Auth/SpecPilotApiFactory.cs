@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SpecPilot.Infrastructure.Persistence;
+using System.Reflection;
 
 namespace SpecPilot.IntegrationTests.Auth;
 
@@ -33,6 +35,10 @@ public class SpecPilotApiFactory : WebApplicationFactory<Program>
             {
                 options.UseInMemoryDatabase(_databaseName);
             });
+
+            services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(_ => { });
+            services.AddControllers()
+                .PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SpecPilotApiFactory).Assembly));
         });
     }
 }

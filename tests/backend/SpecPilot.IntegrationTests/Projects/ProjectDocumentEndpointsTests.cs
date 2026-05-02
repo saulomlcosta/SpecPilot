@@ -7,6 +7,7 @@ using SpecPilot.Domain.Entities;
 using SpecPilot.Domain.Enums;
 using SpecPilot.Infrastructure.Persistence;
 using SpecPilot.IntegrationTests.Auth;
+using SpecPilot.IntegrationTests.Infrastructure;
 
 namespace SpecPilot.IntegrationTests.Projects;
 
@@ -72,6 +73,9 @@ public class ProjectDocumentEndpointsTests : IClassFixture<SpecPilotApiFactory>
         var response = await client.PostAsync($"/api/projects/{projectId}/generate-document", content: null);
 
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Extensions["code"].GetString().Should().Be("projects.invalid_status_for_document_generation");
     }
 
     [Fact]
@@ -87,6 +91,9 @@ public class ProjectDocumentEndpointsTests : IClassFixture<SpecPilotApiFactory>
         var response = await clientB.GetAsync($"/api/projects/{projectId}/document");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Extensions["code"].GetString().Should().Be("projects.not_found");
     }
 
     [Fact]
@@ -98,6 +105,9 @@ public class ProjectDocumentEndpointsTests : IClassFixture<SpecPilotApiFactory>
         var response = await client.GetAsync($"/api/projects/{projectId}/document");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Extensions["code"].GetString().Should().Be("projects.document_not_found");
     }
 
     private async Task<HttpClient> CreateAuthenticatedClientAsync()

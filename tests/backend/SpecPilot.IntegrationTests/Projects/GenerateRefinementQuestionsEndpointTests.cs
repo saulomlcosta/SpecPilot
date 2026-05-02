@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SpecPilot.Domain.Enums;
 using SpecPilot.Infrastructure.Persistence;
 using SpecPilot.IntegrationTests.Auth;
+using SpecPilot.IntegrationTests.Infrastructure;
 
 namespace SpecPilot.IntegrationTests.Projects;
 
@@ -49,6 +50,9 @@ public class GenerateRefinementQuestionsEndpointTests : IClassFixture<SpecPilotA
         var response = await clientB.PostAsync($"/api/projects/{projectId}/generate-questions", content: null);
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Extensions["code"].GetString().Should().Be("projects.not_found");
     }
 
     [Fact]
@@ -61,6 +65,9 @@ public class GenerateRefinementQuestionsEndpointTests : IClassFixture<SpecPilotA
         var secondResponse = await client.PostAsync($"/api/projects/{projectId}/generate-questions", content: null);
 
         secondResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        var problem = await secondResponse.Content.ReadFromJsonAsync<ProblemDetailsContract>();
+        problem.Should().NotBeNull();
+        problem!.Extensions["code"].GetString().Should().Be("projects.invalid_status_for_question_generation");
     }
 
     private async Task<HttpClient> CreateAuthenticatedClientAsync()

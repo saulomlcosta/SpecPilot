@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging.Abstractions;
 using SpecPilot.Application.Abstractions.Auth;
 using SpecPilot.Domain.Entities;
 
@@ -22,4 +23,9 @@ internal sealed class TestPasswordHasher : IPasswordHasherService
 internal sealed class TestCurrentUserAccessor(Guid? userId) : ICurrentUserAccessor
 {
     public Guid? UserId { get; } = userId;
+}
+
+internal static class TestLogger<T>
+{
+    public static NullLogger<T> Instance { get; } = NullLogger<T>.Instance;
 }

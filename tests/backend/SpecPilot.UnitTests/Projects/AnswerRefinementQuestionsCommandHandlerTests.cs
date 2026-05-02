@@ -24,7 +24,7 @@ public class AnswerRefinementQuestionsCommandHandlerTests
         context.RefinementQuestions.AddRange(firstQuestion, secondQuestion);
         await context.SaveChangesAsync();
 
-        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(userId));
+        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(userId), TestLogger<AnswerRefinementQuestionsCommandHandler>.Instance);
         var command = new AnswerRefinementQuestionsCommand
         {
             ProjectId = project.Id,
@@ -66,7 +66,7 @@ public class AnswerRefinementQuestionsCommandHandlerTests
         context.Projects.Add(project);
         await context.SaveChangesAsync();
 
-        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(null));
+        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(null), TestLogger<AnswerRefinementQuestionsCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new AnswerRefinementQuestionsCommand
@@ -100,7 +100,7 @@ public class AnswerRefinementQuestionsCommandHandlerTests
         context.RefinementQuestions.Add(question);
         await context.SaveChangesAsync();
 
-        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(Guid.NewGuid()));
+        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(Guid.NewGuid()), TestLogger<AnswerRefinementQuestionsCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new AnswerRefinementQuestionsCommand
@@ -132,7 +132,7 @@ public class AnswerRefinementQuestionsCommandHandlerTests
         context.Projects.Add(project);
         await context.SaveChangesAsync();
 
-        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(userId));
+        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(userId), TestLogger<AnswerRefinementQuestionsCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new AnswerRefinementQuestionsCommand
@@ -164,7 +164,7 @@ public class AnswerRefinementQuestionsCommandHandlerTests
         context.Projects.Add(project);
         await context.SaveChangesAsync();
 
-        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(userId));
+        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(userId), TestLogger<AnswerRefinementQuestionsCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new AnswerRefinementQuestionsCommand
@@ -199,7 +199,7 @@ public class AnswerRefinementQuestionsCommandHandlerTests
         context.RefinementQuestions.AddRange(firstQuestion, secondQuestion);
         await context.SaveChangesAsync();
 
-        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(userId));
+        var handler = new AnswerRefinementQuestionsCommandHandler(context, new TestCurrentUserAccessor(userId), TestLogger<AnswerRefinementQuestionsCommandHandler>.Instance);
 
         var result = await handler.Handle(
             new AnswerRefinementQuestionsCommand

@@ -28,7 +28,8 @@ public class GenerateProjectDocumentCommandHandlerTests
         var handler = new GenerateProjectDocumentCommandHandler(
             context,
             new TestCurrentUserAccessor(userId),
-            new FakeAiService());
+            new FakeAiService(),
+            TestLogger<GenerateProjectDocumentCommandHandler>.Instance);
 
         var result = await handler.Handle(new GenerateProjectDocumentCommand(project.Id), CancellationToken.None);
 
@@ -58,7 +59,8 @@ public class GenerateProjectDocumentCommandHandlerTests
         var handler = new GenerateProjectDocumentCommandHandler(
             context,
             new TestCurrentUserAccessor(Guid.NewGuid()),
-            new FakeAiService());
+            new FakeAiService(),
+            TestLogger<GenerateProjectDocumentCommandHandler>.Instance);
 
         var result = await handler.Handle(new GenerateProjectDocumentCommand(project.Id), CancellationToken.None);
 
@@ -80,7 +82,8 @@ public class GenerateProjectDocumentCommandHandlerTests
         var handler = new GenerateProjectDocumentCommandHandler(
             context,
             new TestCurrentUserAccessor(userId),
-            new FakeAiService());
+            new FakeAiService(),
+            TestLogger<GenerateProjectDocumentCommandHandler>.Instance);
 
         var result = await handler.Handle(new GenerateProjectDocumentCommand(project.Id), CancellationToken.None);
 
@@ -111,7 +114,8 @@ public class GenerateProjectDocumentCommandHandlerTests
         var handler = new GenerateProjectDocumentCommandHandler(
             context,
             new TestCurrentUserAccessor(userId),
-            new FakeAiService());
+            new FakeAiService(),
+            TestLogger<GenerateProjectDocumentCommandHandler>.Instance);
 
         var result = await handler.Handle(new GenerateProjectDocumentCommand(project.Id), CancellationToken.None);
 

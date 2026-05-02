@@ -33,7 +33,8 @@ public class GenerateRefinementQuestionsCommandHandlerTests
         var handler = new GenerateRefinementQuestionsCommandHandler(
             context,
             new TestCurrentUserAccessor(userId),
-            new FakeAiService());
+            new FakeAiService(),
+            TestLogger<GenerateRefinementQuestionsCommandHandler>.Instance);
 
         var result = await handler.Handle(new GenerateRefinementQuestionsCommand(project.Id), CancellationToken.None);
 
@@ -68,7 +69,8 @@ public class GenerateRefinementQuestionsCommandHandlerTests
         var handler = new GenerateRefinementQuestionsCommandHandler(
             context,
             new TestCurrentUserAccessor(Guid.NewGuid()),
-            new FakeAiService());
+            new FakeAiService(),
+            TestLogger<GenerateRefinementQuestionsCommandHandler>.Instance);
 
         var result = await handler.Handle(new GenerateRefinementQuestionsCommand(project.Id), CancellationToken.None);
 
@@ -98,7 +100,8 @@ public class GenerateRefinementQuestionsCommandHandlerTests
         var handler = new GenerateRefinementQuestionsCommandHandler(
             context,
             new TestCurrentUserAccessor(userId),
-            new FakeAiService());
+            new FakeAiService(),
+            TestLogger<GenerateRefinementQuestionsCommandHandler>.Instance);
 
         var result = await handler.Handle(new GenerateRefinementQuestionsCommand(project.Id), CancellationToken.None);
 
