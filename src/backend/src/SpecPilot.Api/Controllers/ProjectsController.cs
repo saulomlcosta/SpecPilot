@@ -6,7 +6,9 @@ using SpecPilot.Application.Projects.Create;
 using SpecPilot.Application.Projects.Delete;
 using SpecPilot.Application.Projects.AnswerQuestions;
 using SpecPilot.Application.Projects.GenerateQuestions;
+using SpecPilot.Application.Projects.GenerateDocument;
 using SpecPilot.Application.Projects.GetById;
+using SpecPilot.Application.Projects.GetDocument;
 using SpecPilot.Application.Projects.List;
 using SpecPilot.Application.Projects.Update;
 
@@ -88,6 +90,20 @@ public class ProjectsController : ControllerBase
         };
 
         var result = await _mediator.Send(request, cancellationToken);
+        return this.ToActionResult(result, Ok);
+    }
+
+    [HttpPost("{id:guid}/generate-document")]
+    public async Task<IActionResult> GenerateDocument(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GenerateProjectDocumentCommand(id), cancellationToken);
+        return this.ToActionResult(result, Ok);
+    }
+
+    [HttpGet("{id:guid}/document")]
+    public async Task<IActionResult> GetDocument(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetProjectDocumentQuery(id), cancellationToken);
         return this.ToActionResult(result, Ok);
     }
 }

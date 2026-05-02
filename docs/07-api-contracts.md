@@ -27,8 +27,8 @@ Este documento descreve contratos iniciais para orientar a implementacao da Web 
 
 ### Documento
 
-- `POST /api/projects/{id}/initial-document`
-- `GET /api/projects/{id}/initial-document`
+- `POST /api/projects/{id}/generate-document`
+- `GET /api/projects/{id}/document`
 
 ## Contratos de autenticacao
 
@@ -325,6 +325,73 @@ Response `400 Bad Request` quando a requisicao nao enviar todas as respostas obr
 Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
 
 Response `409 Conflict` quando o projeto nao estiver em status `QuestionsGenerated` ou ainda nao possuir perguntas geradas.
+
+### `POST /api/projects/{id}/generate-document`
+
+Header:
+
+```text
+Authorization: Bearer <jwt-token>
+```
+
+Response `200 OK`:
+
+```json
+{
+  "projectId": "guid",
+  "status": "DocumentGenerated",
+  "overview": "Sistema web para apoiar a operacao de uma clinica.",
+  "functionalRequirements": [
+    "Permitir cadastro de pacientes",
+    "Permitir agendamento de consultas"
+  ],
+  "nonFunctionalRequirements": [
+    "Disponibilidade em horario comercial",
+    "Controle basico de acesso"
+  ],
+  "useCases": [
+    "Cadastrar paciente",
+    "Agendar consulta"
+  ],
+  "risks": [
+    "Descricao inicial insuficiente",
+    "Requisitos ambiguos"
+  ]
+}
+```
+
+Regras do endpoint:
+
+- apenas o dono do projeto pode gerar documento
+- o projeto precisa estar com status `QuestionsAnswered`
+- a geracao deve usar a interface de IA configurada
+- o documento gerado deve ser persistido no banco
+- a interacao com IA deve ser registrada em log
+- o status do projeto deve mudar para `DocumentGenerated`
+- o MVP considera apenas um documento por projeto
+
+Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
+
+Response `409 Conflict` quando o projeto nao estiver em status `QuestionsAnswered` ou quando o documento ja tiver sido gerado.
+
+### `GET /api/projects/{id}/document`
+
+Header:
+
+```text
+Authorization: Bearer <jwt-token>
+```
+
+Response `200 OK` com o mesmo formato do documento gerado.
+
+Regras do endpoint:
+
+- apenas o dono do projeto pode consultar o documento
+- o endpoint retorna o documento persistido para o projeto
+
+Response `404 Not Found` quando o projeto nao existir ou nao pertencer ao usuario autenticado.
+
+Response `404 Not Found` quando o documento ainda nao tiver sido gerado para o projeto.
 
 ## Exemplo conceitual de documento gerado
 
