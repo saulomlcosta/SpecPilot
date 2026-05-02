@@ -103,10 +103,29 @@ public class GenerateProjectDocumentCommandHandler
         {
             ProjectId = project.Id,
             InteractionType = "GenerateProjectDocument",
-            Provider = _aiService.GetType().Name,
+            Provider = aiResponse.Metadata?.Provider ?? _aiService.GetType().Name,
             PromptName = PromptName,
-            InputPayload = JsonSerializer.Serialize(aiRequest),
-            OutputPayload = JsonSerializer.Serialize(aiResponse),
+            InputPayload = JsonSerializer.Serialize(new
+            {
+                Request = aiRequest,
+                Model = aiResponse.Metadata?.Model,
+                Prompt = aiResponse.Metadata?.RenderedPrompt,
+                Metadata = aiResponse.Metadata?.AdditionalData
+            }),
+            OutputPayload = JsonSerializer.Serialize(new
+            {
+                Response = new
+                {
+                    aiResponse.Overview,
+                    aiResponse.FunctionalRequirements,
+                    aiResponse.NonFunctionalRequirements,
+                    aiResponse.UseCases,
+                    aiResponse.Risks
+                },
+                RawResponse = aiResponse.Metadata?.RawResponse,
+                FinishReason = aiResponse.Metadata?.FinishReason,
+                Metadata = aiResponse.Metadata?.AdditionalData
+            }),
             IsSuccessful = true
         });
 

@@ -29,6 +29,13 @@ public static class DependencyInjection
         services.AddScoped<IPasswordHasherService, PasswordHasherService>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
+        services.AddHttpClient<OpenAiService>((provider, client) =>
+        {
+            var options = provider.GetRequiredService<IOptions<AiOptions>>().Value;
+            client.BaseAddress = new Uri("https://api.openai.com/");
+            client.Timeout = TimeSpan.FromSeconds(options.OpenAi.TimeoutSeconds);
+        });
+        services.AddScoped<OpenAiPromptRenderer>();
         services.Configure<AiOptions>(options =>
         {
             configuration.GetSection(AiOptions.SectionName).Bind(options);
@@ -45,6 +52,7 @@ public static class DependencyInjection
             return options.Provider.Trim().ToLowerInvariant() switch
             {
                 "fake" => new FakeAiService(),
+                "openai" => provider.GetRequiredService<OpenAiService>(),
                 _ => new FakeAiService()
             };
         });

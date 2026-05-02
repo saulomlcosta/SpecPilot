@@ -18,7 +18,12 @@ public class FakeAiService : IAiService
                 "Existe alguma regra de negocio que precisa ser respeitada desde o inicio?",
                 "Quais informacoes o usuario precisara informar para usar o sistema?",
                 "Ha alguma restricao tecnica, operacional ou de prazo importante para o MVP?"
-            ]
+            ],
+            Metadata = new AiResponseMetadata
+            {
+                Provider = "Fake",
+                Model = "fake-static-response"
+            }
         };
 
         return Task.FromResult(response);
@@ -52,7 +57,12 @@ public class FakeAiService : IAiService
             [
                 "Descricao inicial insuficiente para orientar o refinamento.",
                 "Respostas de refinamento incompletas podem reduzir a qualidade do documento inicial."
-            ]
+            ],
+            Metadata = new AiResponseMetadata
+            {
+                Provider = "Fake",
+                Model = "fake-static-response"
+            }
         };
 
         return Task.FromResult(response);

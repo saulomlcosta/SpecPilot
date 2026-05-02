@@ -51,4 +51,11 @@ Regras:
 - nao sair do escopo do MVP descrito pelo usuario
 - evitar perguntas redundantes
 - nao inventar funcionalidades avancadas
+- responder apenas com JSON valido
 
+## Dados do projeto
+
+- nome: {{ProjectName}}
+- descricao inicial: {{InitialDescription}}
+- objetivo: {{Goal}}
+- publico-alvo: {{TargetAudience}}

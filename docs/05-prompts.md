@@ -39,6 +39,15 @@ Esse formato foi escolhido para:
 - facilitar auditoria academica
 - tornar o comportamento mais explicavel
 
+## Renderizacao em runtime
+
+Quando o provider OpenAI estiver habilitado:
+
+- os arquivos de `prompts/runtime/` sao lidos pela Infrastructure
+- placeholders como `{{ProjectName}}`, `{{InitialDescription}}`, `{{Goal}}`, `{{TargetAudience}}` e `{{RefinementAnswers}}` sao substituidos antes da chamada HTTP
+- o prompt renderizado e registrado para auditoria no log de interacao com IA
+- a resposta solicitada continua sendo JSON estruturado
+
 ## Prompts do Codex existentes
 
 - `00-create-documentation-base.md`

@@ -76,6 +76,8 @@ Por que usar IA aqui:
 
 O projeto deve funcionar **sem chave externa** usando `FakeAiService`. O provider OpenAI sera opcional e controlado por variavel de ambiente.
 
+O provider padrao continua sendo `Fake`, garantindo execucao local e testes sem dependencias externas. Quando desejado, a OpenAI pode ser habilitada por configuracao sem alterar a `Application`.
+
 ## O que esta pronto nesta etapa
 
 Nesta fase, o repositorio entrega:
@@ -197,9 +199,33 @@ O arquivo `.env.example` ja traz valores padrao para:
 - banco PostgreSQL
 - porta da API
 - configuracao JWT basica
-- `AI_PROVIDER=fake`
+- `Ai__Provider=Fake`
+- `Ai__OpenAi__ApiKey`
+- `Ai__OpenAi__Model`
 
 Isso permite subir o ambiente sem depender de chave externa de IA.
+
+## Uso de IA Fake e OpenAI
+
+Para execucao local e testes:
+
+- mantenha `Ai__Provider=Fake`
+- nao e necessario informar chave externa
+
+Para habilitar OpenAI:
+
+```text
+Ai__Provider=OpenAI
+Ai__OpenAi__ApiKey=sua-chave
+Ai__OpenAi__Model=gpt-4.1-mini
+```
+
+Neste modo:
+
+- a Infrastructure usa `HttpClient` direto contra a API da OpenAI
+- os prompts de `prompts/runtime/` sao renderizados com placeholders
+- o provider exige resposta em JSON estruturado
+- a resposta e validada antes de seguir para a aplicacao
 
 ## Como encerrar o ambiente
 

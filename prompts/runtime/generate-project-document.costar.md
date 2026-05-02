@@ -45,4 +45,15 @@ Regras:
 - nao inventar integracoes fora do escopo
 - manter foco em MVP
 - identificar riscos de forma objetiva
+- responder apenas com JSON valido
 
+## Dados do projeto
+
+- nome: {{ProjectName}}
+- descricao inicial: {{InitialDescription}}
+- objetivo: {{Goal}}
+- publico-alvo: {{TargetAudience}}
+
+## Respostas de refinamento
+
+{{RefinementAnswers}}

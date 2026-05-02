@@ -47,4 +47,26 @@ public class AiDependencyInjectionTests
 
         aiService.Should().BeOfType<FakeAiService>();
     }
+
+    [Fact]
+    public void Should_register_openai_service_when_provider_is_openai()
+    {
+        var services = new ServiceCollection();
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Port=5432;Database=specpilot;Username=specpilot;Password=specpilot",
+                ["Ai:Provider"] = "OpenAI",
+                ["Ai:OpenAi:ApiKey"] = "test-key",
+                ["Ai:OpenAi:Model"] = "gpt-4.1-mini"
+            })
+            .Build();
+
+        services.AddInfrastructure(configuration);
+        var provider = services.BuildServiceProvider();
+
+        var aiService = provider.GetRequiredService<IAiService>();
+
+        aiService.Should().BeOfType<OpenAiService>();
+    }
 }

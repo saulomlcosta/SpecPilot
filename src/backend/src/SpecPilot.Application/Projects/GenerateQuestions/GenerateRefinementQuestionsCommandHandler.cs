@@ -86,10 +86,22 @@ public class GenerateRefinementQuestionsCommandHandler
         {
             ProjectId = project.Id,
             InteractionType = "GenerateRefinementQuestions",
-            Provider = _aiService.GetType().Name,
+            Provider = aiResponse.Metadata?.Provider ?? _aiService.GetType().Name,
             PromptName = PromptName,
-            InputPayload = JsonSerializer.Serialize(aiRequest),
-            OutputPayload = JsonSerializer.Serialize(aiResponse),
+            InputPayload = JsonSerializer.Serialize(new
+            {
+                Request = aiRequest,
+                Model = aiResponse.Metadata?.Model,
+                Prompt = aiResponse.Metadata?.RenderedPrompt,
+                Metadata = aiResponse.Metadata?.AdditionalData
+            }),
+            OutputPayload = JsonSerializer.Serialize(new
+            {
+                Response = aiResponse.Questions,
+                RawResponse = aiResponse.Metadata?.RawResponse,
+                FinishReason = aiResponse.Metadata?.FinishReason,
+                Metadata = aiResponse.Metadata?.AdditionalData
+            }),
             IsSuccessful = true
         });
 

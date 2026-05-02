@@ -17,6 +17,9 @@
 - escrever testes desde cedo
 - usar commits pequenos e descritivos
 - proteger invariantes de fluxo em casos de uso especificos, sem expor mudancas sensiveis em endpoints genericos
+- tratar respostas de providers de IA como entrada externa nao confiavel
+- manter chaves e modelos de IA apenas em configuracao por variavel de ambiente
+- encapsular detalhes HTTP de providers apenas na Infrastructure
 
 ## Result Pattern neste projeto
 
